@@ -10,7 +10,7 @@ Include:
 import os
 import json
 import datetime
-from logging_utils import get_logger, get_log_message
+from _modules.logging_utils import get_logger, get_log_message
 
 logger = get_logger(__name__)
 

@@ -5,13 +5,16 @@ Include:
 - Integrazione con configurazione
 - Logging avanzato
 """
+import sys  
+from pathlib import Path  
+sys.path.append(str(Path(__file__).parent.parent))
 
 import json
 import os
 import argparse
 from config import Config
 from xml_generator import create_xml_with_indent
-from logging_utils import get_logger, get_log_message
+from _modules.logging_utils import get_logger, get_log_message
 
 logger = get_logger(__name__)
 

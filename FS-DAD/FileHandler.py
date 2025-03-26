@@ -1,7 +1,7 @@
 import os
 import mimetypes
 from charset_normalizer import from_path
-from logging_utils import get_logger, get_log_message
+from _modules.logging_utils import get_logger, get_log_message
 
 logger = get_logger(__name__)
 class FileHandler:

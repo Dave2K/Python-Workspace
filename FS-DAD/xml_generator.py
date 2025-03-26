@@ -11,7 +11,7 @@ import fnmatch
 import datetime
 from xmlnode import XMLNode
 from FileHandler import FileHandler
-from logging_utils import get_logger, get_log_message
+from _modules.logging_utils import get_logger, get_log_message
 
 logger = get_logger(__name__)
 
