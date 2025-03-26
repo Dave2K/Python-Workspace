@@ -2,14 +2,46 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Esegui fs_dad.py",
+            "name": "Esegui fs-dad.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/FS-DAD/fs_dad.py", 
+            "program": "${workspaceFolder}/FS-DAD/fs-dad.py", 
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
                 "--config", "${workspaceFolder}/FS-DAD/config.json"
+            ]
+        },
+        {
+            "name": "Esegui fs-sln-generator.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/fs-sln-generator.py",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "C:\\sources\\FlexCore-WorkSpace",
+                "C:\\sources\\FlexCore-WorkSpace\\Solutions\\all-generator.sln"
+            ]
+        },
+        {
+            "name": "Esegui reference-checker con fix",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/reference-checker.py",
+            "cwd": "C:\\sources\\FlexCore-WorkSpace",
+            "args": [
+                "C:\\sources\\FlexCore-Workspace", 
+                "--fix"
+            ]
+        },
+        {
+            "name": "Esegui reference-checker senza fix",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/reference-checker.py",
+            "cwd": "C:\\sources\\FlexCore-WorkSpace",
+            "args": [
+                "C:\\sources\\FlexCore-Workspace"
             ]
         },
         {
