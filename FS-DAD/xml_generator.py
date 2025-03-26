@@ -5,15 +5,17 @@ Generatore XML con supporto a:
 - CDATA per file di testo
 - vuoto per file binari (non riconosciuti come testo)
 """
+##
+from _modules import configure_logging, create_logger
+logger = create_logger(__name__)
+##
+
 
 import os
 import fnmatch
 import datetime
 from xmlnode import XMLNode
 from FileHandler import FileHandler
-from _modules.logging_utils import get_logger, get_log_message
-
-logger = get_logger(__name__)
 
 def create_xml_with_indent(
     target_path_folder,

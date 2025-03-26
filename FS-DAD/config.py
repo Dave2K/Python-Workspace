@@ -6,14 +6,15 @@ Include:
 - Validazione avanzata
 - Gestione dei placeholder
 """
+##
+from _modules import configure_logging, create_logger
+logger = create_logger(__name__)
+##
+
 
 import os
 import json
 import datetime
-from _modules.logging_utils import get_logger, get_log_message
-
-logger = get_logger(__name__)
-
 class Config:
     """Classe per la gestione della configurazione con costanti unificate."""
     

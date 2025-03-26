@@ -5,18 +5,31 @@ Include:
 - Integrazione con configurazione
 - Logging avanzato
 """
-import sys  
-from pathlib import Path  
+##
+# Import necessari per il path e logging
+import sys
+from pathlib import Path
+import logging
+# Aggiungi la root del progetto al PYTHONPATH
 sys.path.append(str(Path(__file__).parent.parent))
+# Import dal modulo aggiornato
+from _modules import configure_logging, create_logger
+# Configurazione iniziale del sistema di logging
+configure_logging(
+    log_folder="_logs",          # Cartella per i log
+    log_level=logging.DEBUG,     # Livello di dettaglio (DEBUG, INFO, WARNING, ERROR)
+    enable_file_logging=True     # Abilita scrittura su file
+)
+# Crea il logger per il modulo corrente
+logger = create_logger(__name__)
+##
 
+# Import successivi
 import json
 import os
 import argparse
 from config import Config
 from xml_generator import create_xml_with_indent
-from _modules.logging_utils import get_logger, get_log_message
-
-logger = get_logger(__name__)
 
 def load_or_create_config(config_file):
     """

@@ -1,9 +1,12 @@
+##
+from _modules import configure_logging, create_logger
+logger = create_logger(__name__)
+##
+
+
 import os
 import mimetypes
 from charset_normalizer import from_path
-from _modules.logging_utils import get_logger, get_log_message
-
-logger = get_logger(__name__)
 class FileHandler:
     """Classe per gestire file, determinare tipo, encoding e leggere contenuto."""
 

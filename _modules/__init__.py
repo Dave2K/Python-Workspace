@@ -1,4 +1,14 @@
-# _modules/__init__.py
-from .logging_utils import ColoredFormatter, get_logger, get_log_message
+from .logging_configurator import LoggingConfigurator, ColoredFormatter
 
-__all__ = ["ColoredFormatter", "get_logger", "get_log_message"]
+__all__ = [
+    "LoggingConfigurator",
+    "ColoredFormatter",
+    "configure_logging",
+    "create_logger"
+]
+
+def configure_logging(**kwargs) -> LoggingConfigurator:
+    """Shortcut per configurazione rapida"""
+    return LoggingConfigurator(**kwargs)
+
+create_logger = LoggingConfigurator.create_logger

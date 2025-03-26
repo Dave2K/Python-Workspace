@@ -27,7 +27,7 @@
             "name": "Esegui reference-checker con fix",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/reference-checker.py",
+            "program": "${workspaceFolder}/reference-checker-fix.py",
             "cwd": "C:\\sources\\FlexCore-WorkSpace",
             "args": [
                 "C:\\sources\\FlexCore-Workspace", 
@@ -38,25 +38,11 @@
             "name": "Esegui reference-checker senza fix",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/reference-checker.py",
+            "program": "${workspaceFolder}/reference-checker-fix.py",
             "cwd": "C:\\sources\\FlexCore-WorkSpace",
             "args": [
                 "C:\\sources\\FlexCore-Workspace"
             ]
-        },
-        {
-            "name": "Esegui xml_compressor",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/xml_compressor.py",
-            "args": ["projects.xml", "--compression", "gzip"]
-        },
-        {
-            "name": "Esegui xml_decompressor",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/xml_decompressor.py",
-            "args": ["projects_gzip.xml"]
         }
     ]
 }
