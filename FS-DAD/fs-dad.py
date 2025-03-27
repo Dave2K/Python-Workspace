@@ -15,11 +15,39 @@ sys.path.append(str(Path(__file__).parent.parent))
 # Import dal modulo aggiornato
 from _modules.logging.logging import configure_logging, create_logger
 # Configurazione iniziale del sistema di logging
+# configure_logging(
+#     max_log_files=5,
+#     file_level=logging.DEBUG,
+#     console_level=logging.INFO,
+#     file_format="%(asctime)s | %(levelname)s | %(message)s",
+#     console_format="%(levelname)s | %(message)s"
+# )
+# Configurazione avanzata
 configure_logging(
-    log_folder="_logs",          # Cartella per i log
-    log_level=logging.DEBUG,     # Livello di dettaglio (DEBUG, INFO, WARNING, ERROR)
-    enable_file_logging=True     # Abilita scrittura su file
+    log_folder="logs",
+    log_level=logging.DEBUG,
+    
+    # Console settings
+    enable_console_logging=True,
+    console_level=logging.INFO,
+    console_format="%(levelname)s | %(message)s",
+    
+    # File settings
+    enable_file_logging=True,
+    file_level=logging.DEBUG,
+    file_format="%(asctime)s.%(msecs)03d | %(levelname)-8s | %(module)s:%(lineno)d | %(message)s",
+    
+    # Naming settings
+    file_prefix="myapp",
+    log_name_source=True,
+    script_name_override="data_processor",
+    enable_timestamp=True,
+    file_extension="log",
+    
+    # Pulizia automatica
+    max_log_files=7
 )
+
 # Crea il logger per il modulo corrente
 logger = create_logger(__name__)
 ##

@@ -1,0 +1,39 @@
+2025-03-27 01:53:04.025 | DEBUG    | config:67 | Configurazione caricata da config.json
+2025-03-27 01:53:04.025 | DEBUG    | config:118 | Inizio calcolo percorso di output per: c:\sources\python-workspace
+2025-03-27 01:53:04.025 | DEBUG    | config:127 | Nome della cartella target: python-workspace
+2025-03-27 01:53:04.025 | DEBUG    | config:131 | Template di output: .\_artifacts\{target}.xml
+2025-03-27 01:53:04.025 | DEBUG    | config:155 | Placeholders: {'target': 'python-workspace', 'timestamp': '20250327_015304'}
+2025-03-27 01:53:04.025 | DEBUG    | config:160 | Percorso di output generato: .\_artifacts\python-workspace.xml
+2025-03-27 01:53:04.026 | DEBUG    | xml_generator:115 | Elaborazione della cartella: python-workspace
+2025-03-27 01:53:04.027 | DEBUG    | xml_generator:129 | Ignorata cartella: .git
+2025-03-27 01:53:04.028 | DEBUG    | xml_generator:142 | Ignorato file: .gitignore
+2025-03-27 01:53:04.028 | DEBUG    | xml_generator:129 | Ignorata cartella: .vscode
+2025-03-27 01:53:04.031 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.102 | DEBUG    | xml_generator:115 | Elaborazione della cartella: FS-DAD
+2025-03-27 01:53:04.103 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.120 | DEBUG    | api:461 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.135 | DEBUG    | api:461 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.139 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.140 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.143 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.155 | DEBUG    | api:461 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.156 | DEBUG    | xml_generator:129 | Ignorata cartella: __pycache__
+2025-03-27 01:53:04.181 | DEBUG    | api:479 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.181 | DEBUG    | xml_generator:115 | Elaborazione della cartella: logs
+2025-03-27 01:53:04.182 | DEBUG    | xml_generator:142 | Ignorato file: myapp_data_processor_20250327_014728.log
+2025-03-27 01:53:04.182 | DEBUG    | xml_generator:142 | Ignorato file: myapp_data_processor_20250327_014746.log
+2025-03-27 01:53:04.182 | DEBUG    | xml_generator:142 | Ignorato file: myapp_data_processor_20250327_015303.log
+2025-03-27 01:53:04.198 | DEBUG    | api:479 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.198 | DEBUG    | xml_generator:129 | Ignorata cartella: _artifacts
+2025-03-27 01:53:04.199 | DEBUG    | xml_generator:115 | Elaborazione della cartella: _logs
+2025-03-27 01:53:04.199 | DEBUG    | xml_generator:115 | Elaborazione della cartella: _modules
+2025-03-27 01:53:04.199 | DEBUG    | xml_generator:115 | Elaborazione della cartella: file_utils
+2025-03-27 01:53:04.210 | DEBUG    | api:461 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.211 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.212 | DEBUG    | xml_generator:129 | Ignorata cartella: __pycache__
+2025-03-27 01:53:04.212 | DEBUG    | xml_generator:115 | Elaborazione della cartella: logging
+2025-03-27 01:53:04.224 | DEBUG    | api:461 | Encoding detection: utf_8 is most likely the one.
+2025-03-27 01:53:04.225 | DEBUG    | xml_generator:129 | Ignorata cartella: __pycache__
+2025-03-27 01:53:04.225 | DEBUG    | api:461 | Encoding detection: ascii is most likely the one.
+2025-03-27 01:53:04.226 | DEBUG    | xml_generator:129 | Ignorata cartella: __pycache__
+2025-03-27 01:53:04.226 | INFO     | fs-dad:128 | XML generato: .\_artifacts\python-workspace.xml
