@@ -3,16 +3,13 @@ import logging
 from pathlib import Path
 
 class ColoredFormatter(logging.Formatter):
-    """
-    Formattatore per log a colori.
-    Utilizza codici ANSI per la colorazione.
-    """
+    """Formattatore per log a colori con codici ANSI"""
     COLORS = {
         logging.DEBUG: "\x1b[36;20m",    # Ciano
-        logging.INFO: "\x1b[32;20m",      # Verde
-        logging.WARNING: "\x1b[33;20m",   # Giallo
-        logging.ERROR: "\x1b[31;20m",     # Rosso
-        logging.CRITICAL: "\x1b[31;1m"    # Rosso intenso
+        logging.INFO: "\x1b[32;20m",     # Verde
+        logging.WARNING: "\x1b[33;20m",  # Giallo
+        logging.ERROR: "\x1b[31;20m",    # Rosso
+        logging.CRITICAL: "\x1b[31;1m"   # Rosso intenso
     }
     RESET = "\x1b[0m"
     BASE_FORMAT = "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s"
@@ -26,28 +23,15 @@ class ColoredFormatter(logging.Formatter):
         return formatter.format(record)
 
 class LoggingConfigurator:
-    """
-    Configurazione centralizzata del sistema di logging.
-    Gestisce sia console che file di log.
-    """
-    def __init__(
-        self,
-        log_folder: str = "_logs",
-        log_level: int = logging.INFO,
-        enable_file_logging: bool = True
-    ):
+    """Configurazione centralizzata del sistema di logging"""
+    def __init__(self, log_folder="_logs", log_level=logging.INFO, enable_file_logging=True):
         self._setup_logging(
             log_folder=Path(log_folder),
             log_level=log_level,
             enable_file_logging=enable_file_logging
         )
 
-    def _setup_logging(
-        self,
-        log_folder: Path,
-        log_level: int,
-        enable_file_logging: bool
-    ):
+    def _setup_logging(self, log_folder: Path, log_level: int, enable_file_logging: bool):
         root_logger = logging.getLogger()
         root_logger.setLevel(log_level)
 
@@ -83,3 +67,12 @@ class LoggingConfigurator:
     def create_logger(name: str | None = None) -> logging.Logger:
         """Restituisce un logger configurato"""
         return logging.getLogger(name)
+
+# Funzioni esportate
+def configure_logging(**kwargs) -> LoggingConfigurator:
+    """Shortcut per configurazione rapida"""
+    return LoggingConfigurator(**kwargs)
+
+create_logger = LoggingConfigurator.create_logger
+
+__all__ = ["LoggingConfigurator", "ColoredFormatter", "configure_logging", "create_logger"]

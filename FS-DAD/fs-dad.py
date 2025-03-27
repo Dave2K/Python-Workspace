@@ -13,7 +13,7 @@ import logging
 # Aggiungi la root del progetto al PYTHONPATH
 sys.path.append(str(Path(__file__).parent.parent))
 # Import dal modulo aggiornato
-from _modules import configure_logging, create_logger
+from _modules.logging.logging import configure_logging, create_logger
 # Configurazione iniziale del sistema di logging
 configure_logging(
     log_folder="_logs",          # Cartella per i log

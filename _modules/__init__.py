@@ -1,14 +1,13 @@
-from .logging_configurator import LoggingConfigurator, ColoredFormatter
+from .logging.logging import (
+    LoggingConfigurator,
+    ColoredFormatter,
+    configure_logging,
+    create_logger
+)
 
 __all__ = [
     "LoggingConfigurator",
-    "ColoredFormatter",
+    "ColoredFormatter", 
     "configure_logging",
     "create_logger"
 ]
-
-def configure_logging(**kwargs) -> LoggingConfigurator:
-    """Shortcut per configurazione rapida"""
-    return LoggingConfigurator(**kwargs)
-
-create_logger = LoggingConfigurator.create_logger

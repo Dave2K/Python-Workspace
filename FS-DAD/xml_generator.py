@@ -6,7 +6,7 @@ Generatore XML con supporto a:
 - vuoto per file binari (non riconosciuti come testo)
 """
 ##
-from _modules import configure_logging, create_logger
+from _modules.logging.logging import configure_logging, create_logger
 logger = create_logger(__name__)
 ##
 
@@ -15,7 +15,7 @@ import os
 import fnmatch
 import datetime
 from xmlnode import XMLNode
-from FileHandler import FileHandler
+from _modules.file_utils import FileHandler
 
 def create_xml_with_indent(
     target_path_folder,

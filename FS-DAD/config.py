@@ -7,7 +7,7 @@ Include:
 - Gestione dei placeholder
 """
 ##
-from _modules import configure_logging, create_logger
+from _modules.logging.logging import configure_logging, create_logger
 logger = create_logger(__name__)
 ##
 
