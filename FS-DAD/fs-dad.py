@@ -9,9 +9,9 @@ Include:
 # Import necessari per il path e logging
 import sys
 from pathlib import Path
-import logging
 # Aggiungi la root del progetto al PYTHONPATH
 sys.path.append(str(Path(__file__).parent.parent))
+
 # Import dal modulo aggiornato
 from _modules.logging.logging import configure_logging, create_logger
 # Configurazione iniziale del sistema di logging
@@ -22,31 +22,34 @@ from _modules.logging.logging import configure_logging, create_logger
 #     file_format="%(asctime)s | %(levelname)s | %(message)s",
 #     console_format="%(levelname)s | %(message)s"
 # )
-# Configurazione avanzata
+# Configurazione avanzata con tutte le opzioni
+import logging
 configure_logging(
-    log_folder="logs",
+    # Cartelle e livelli base
+    log_folder="_logs",
     log_level=logging.DEBUG,
     
-    # Console settings
+    # Configurazione Console
     enable_console_logging=True,
     console_level=logging.INFO,
-    console_format="%(levelname)s | %(message)s",
+    console_format="%(asctime)s - %(levelname)-8s - %(module)-12s - %(message)s",
     
-    # File settings
+    # Configurazione File
     enable_file_logging=True,
     file_level=logging.DEBUG,
-    file_format="%(asctime)s.%(msecs)03d | %(levelname)-8s | %(module)s:%(lineno)d | %(message)s",
+    file_format="%(asctime)s | %(levelname)-8s | %(threadName)-10s | %(module)-15s | %(message)s",
     
-    # Naming settings
-    file_prefix="myapp",
+    # Naming file
+    file_prefix="",
     log_name_source=True,
-    script_name_override="data_processor",
-    enable_timestamp=True,
+    script_name_override=Path(__file__).stem,  # Prende il nome di questo file
+    enable_timestamp=False,
     file_extension="log",
     
-    # Pulizia automatica
-    max_log_files=7
+    # Rotazione log
+    max_log_files=5
 )
+
 
 # Crea il logger per il modulo corrente
 logger = create_logger(__name__)

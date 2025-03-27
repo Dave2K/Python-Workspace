@@ -24,7 +24,7 @@ class FileHandler:
         self.coherence = None
         self.bom = None
         self.mime = None
-        self.type = None
+        # self.type = None
 
     def get_info(self):
         """
