@@ -67,9 +67,6 @@ class Config:
                 logger.debug(f"Configurazione caricata da {self.config_file_path}")
             except (json.JSONDecodeError, IOError) as e:
                 logger.error(f"Errore caricamento config: {str(e)}")
-                self._create_default_config()
-        else:
-            self._create_default_config()
 
     def _create_default_config(self):
         """

@@ -10,6 +10,9 @@
         "FlexCore.Core.*",
         "FlexCore.Logging.*"        
     ],
+    "exclude_folders0": [
+        "Tests"
+    ],
     "exclude_folders": [
         "Tests",
         "bin",

@@ -16,6 +16,7 @@ import fnmatch
 import datetime
 from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
+import xml.etree.ElementTree as ET
 
 def create_xml_with_indent(
     target_path_folder,
@@ -208,7 +209,7 @@ def create_xml_with_indent(
         include_folders=include_folders,
         split_content=split_content
     )
-
+    
     # Scrittura file
     with open(output_file, "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="utf-8"?>\n')

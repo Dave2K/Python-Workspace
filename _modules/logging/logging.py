@@ -1,67 +1,156 @@
-# _modules/logging/logging.py
+"""
+Modulo di logging avanzato con le seguenti funzionalità:
+
+Funzionalità principali:
+- Logging su console con colori ANSI
+- Logging su file con rotazione automatica
+- Formattazione personalizzabile per console/file
+- Supporto multi-livello (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- Pulizia automatica dei log obsoleti
+- Scelta tra append e sovrascrittura dei file
+- Naming file flessibile con timestamp e prefissi
+
+Configurazione base:
+from _modules.logging import configure_logging, create_logger
+configure_logging()  # Configurazione di default
+logger = create_logger(__name__)
+
+# -------------------------------------------------------------------
+# ESEMPI DI SETUP CONFIGURAZIONE
+# -------------------------------------------------------------------
+
+1. Configurazione Sviluppo (default)
+   - Log a colori su console
+   - Log dettagliati su file
+   - Rotazione automatica (7 file)
+dev_config = {
+    'log_folder': "dev_logs",
+    'file_prefix': "dev"
+}
+
+
+2. Configurazione Produzione
+   - Solo log su file
+   - Formato semplificato
+   - Rotazione giornaliera
+
+prod_config = {
+    'enable_console_logging': False,
+    'file_format': "%(asctime)s | %(levelname)-8s | %(message)s",
+    'enable_timestamp': True,
+    'max_log_files': 30,
+    'file_prefix': "prod"
+}
+
+3. Configurazione Debug
+   - Log completi con stack trace
+   - Console det
+"""
+
 import datetime
 import logging
 import sys
 import os
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 class ColoredFormatter(logging.Formatter):
-    """Formattatore avanzato per console con colori ANSI"""
+    """
+    Formattatore per console con colori ANSI
+    
+    Parametri:
+    - fmt: Formato del messaggio (default: "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s")
+    - datefmt: Formato della data (default: "%Y-%m-%d %H:%M:%S")
+    
+    Colori disponibili:
+    - DEBUG: Ciano
+    - INFO: Verde
+    - WARNING: Giallo
+    - ERROR: Rosso
+    - CRITICAL: Rosso intenso
+    """
+    
     COLORS = {
-        logging.DEBUG: "\x1b[36;20m",    # Ciano
-        logging.INFO: "\x1b[32;20m",     # Verde
-        logging.WARNING: "\x1b[33;20m",  # Giallo
-        logging.ERROR: "\x1b[31;20m",    # Rosso
-        logging.CRITICAL: "\x1b[31;1m"   # Rosso intenso
+        logging.DEBUG: '\033[36m',     # Ciano
+        logging.INFO: '\033[32m',      # Verde
+        logging.WARNING: '\033[33m',   # Giallo
+        logging.ERROR: '\033[31m',     # Rosso
+        logging.CRITICAL: '\033[31;1m' # Rosso intenso
     }
-    RESET = "\x1b[0m"
+    RESET = '\033[0m'
 
     def __init__(self, fmt: Optional[str] = None, datefmt: Optional[str] = None):
-        fmt = fmt or "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s"
-        super().__init__(fmt, datefmt)
+        super().__init__(
+            fmt or "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
+            datefmt or "%Y-%m-%d %H:%M:%S"
+        )
 
     def format(self, record: logging.LogRecord) -> str:
         color = self.COLORS.get(record.levelno, self.COLORS[logging.INFO])
-        formatted = super().format(record)
-        return f"{color}{formatted}{self.RESET}"
+        return f"{color}{super().format(record)}{self.RESET}"
 
 class LoggingConfigurator:
-    """Gestione logging avanzata con funzionalità verificate"""
+    """
+    Configuratore centrale del sistema di logging
     
-    DEFAULT_CONFIG = {
-        'log_folder': "_logs",
+    Parametri di configurazione:
+    
+    :param log_folder: Cartella per i log (default: "logs")
+    :param log_level: Livello base del logger (default: logging.INFO)
+    :param enable_console_logging: Abilita output su console (default: True)
+    :param console_level: Livello per la console (default: logging.INFO)
+    :param console_format: Formato console (default: "%(asctime)s - %(levelname)-8s - %(message)s")
+    :param enable_file_logging: Abilita log su file (default: True)
+    :param file_level: Livello per i file (default: logging.DEBUG)
+    :param file_format: Formato file (default: "%(asctime)s.%(msecs)03d | %(levelname)-8s | %(name)-20s | %(message)s")
+    :param file_prefix: Prefisso nome file (default: "app")
+    :param log_name_source: Includi nome script nel nome file (default: True)
+    :param script_name_override: Nome script personalizzato (default: None)
+    :param enable_timestamp: Aggiungi timestamp al nome file (default: False)
+    :param file_extension: Estensione file (default: "log")
+    :param max_log_files: Numero massimo file da mantenere (default: 7)
+    :param file_mode: Modalità scrittura file ('a'=append, 'w'=sovrascrivi) (default: 'a')
+    :param rotate_on_start: Cancella log esistenti all'avvio (solo con file_mode='w') (default: False)
+    """
+    
+    DEFAULTS: Dict[str, Any] = {
+        'log_folder': "logs",
         'log_level': logging.INFO,
-        'enable_file_logging': True,
         'enable_console_logging': True,
-        'log_name_source': True,
-        'enable_timestamp': False,
-        'file_prefix': "log",
-        'file_extension': "log",
-        'script_name_override': None,
-        'max_log_files': 7,  # Valore di default più sicuro
-        'file_format': "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
+        'console_level': logging.INFO,
         'console_format': "%(asctime)s - %(levelname)-8s - %(message)s",
+        'enable_file_logging': True,
         'file_level': logging.DEBUG,
-        'console_level': logging.INFO
+        'file_format': "%(asctime)s.%(msecs)03d | %(levelname)-8s | %(name)-20s | %(message)s",
+        'file_prefix': "app",
+        'log_name_source': True,
+        'script_name_override': None,
+        'enable_timestamp': False,
+        'file_extension': "log",
+        'max_log_files': 7,
+        'file_mode': 'w',
+        'rotate_on_start': False
     }
 
     def __init__(self, **kwargs):
-        self.config = {**self.DEFAULT_CONFIG, **self._validate_config(kwargs)}
-        self._setup_logging()
+        self.config = {**self.DEFAULTS, **self._validate_config(kwargs)}
+        self._setup()
 
-    def _validate_config(self, config: dict) -> dict:
-        """Validazione dei parametri di configurazione"""
-        if config.get('max_log_files') and not isinstance(config['max_log_files'], int):
-            raise ValueError("max_log_files deve essere un intero")
-        
+    def _validate_config(self, config: Dict) -> Dict:
+        """Valida i parametri di configurazione"""
         if not isinstance(config.get('log_folder', ''), str):
             raise TypeError("log_folder deve essere una stringa")
+        
+        if config.get('max_log_files') and not isinstance(config['max_log_files'], int):
+            raise ValueError("max_log_files deve essere un intero")
+            
+        # if config.get('file_mode') not in ('a', 'w'):
+        #     raise ValueError("file_mode deve essere 'a' (append) o 'w' (write)")
             
         return config
 
-    def _setup_logging(self) -> None:
-        """Configurazione principale del logging"""
+    def _setup(self) -> None:
+        """Configura il sistema di logging"""
         root_logger = logging.getLogger()
         root_logger.setLevel(self.config['log_level'])
         self._clear_handlers(root_logger)
@@ -70,48 +159,50 @@ class LoggingConfigurator:
             self._add_console_handler(root_logger)
 
         if self.config['enable_file_logging']:
+            if self.config['rotate_on_start'] and self.config['file_mode'] == 'w':
+                self._clean_old_logs(keep=0)
+                
             self._add_file_handler(root_logger)
             self._clean_old_logs()
 
     def _clear_handlers(self, logger: logging.Logger) -> None:
-        """Pulizia completa degli handler esistenti"""
+        """Rimuove tutti gli handler esistenti"""
         for handler in logger.handlers[:]:
             handler.close()
             logger.removeHandler(handler)
 
     def _add_console_handler(self, logger: logging.Logger) -> None:
-        """Configurazione output console"""
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(self.config['console_level'])
-        console_handler.setFormatter(ColoredFormatter(
-            fmt=self.config['console_format'],
-            datefmt="%Y-%m-%d %H:%M:%S"
+        """Aggiunge handler per la console"""
+        handler = logging.StreamHandler()
+        handler.setLevel(self.config['console_level'])
+        handler.setFormatter(ColoredFormatter(
+            fmt=self.config['console_format']
         ))
-        logger.addHandler(console_handler)
+        logger.addHandler(handler)
 
     def _add_file_handler(self, logger: logging.Logger) -> None:
-        """Configurazione log su file"""
-        log_folder = Path(self.config['log_folder'])
-        log_folder.mkdir(parents=True, exist_ok=True)
-
-        file_handler = logging.FileHandler(
-            log_folder / self._generate_log_filename(),
-            encoding="utf-8",
-            mode="a"
+        """Aggiunge handler per i file"""
+        log_file = self._generate_log_filename()
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        handler = logging.FileHandler(
+            filename=log_file,
+            encoding='utf-8',
+            mode=self.config['file_mode']
         )
-        file_handler.setLevel(self.config['file_level'])
-        file_handler.setFormatter(logging.Formatter(
+        handler.setLevel(self.config['file_level'])
+        handler.setFormatter(logging.Formatter(
             fmt=self.config['file_format'],
             datefmt="%Y-%m-%d %H:%M:%S"
         ))
-        logger.addHandler(file_handler)
+        logger.addHandler(handler)
 
-    def _generate_log_filename(self) -> str:
-        """Generazione nome file con controllo degli errori"""
+    def _generate_log_filename(self) -> Path:
+        """Genera il nome del file di log"""
         try:
             script_name = self.config['script_name_override'] or Path(sys.argv[0]).stem
         except Exception:
-            script_name = "unknown_script"
+            script_name = "unknown"
 
         parts: List[str] = []
         if self.config['file_prefix']:
@@ -123,31 +214,40 @@ class LoggingConfigurator:
         if self.config['enable_timestamp']:
             parts.append(datetime.datetime.now().strftime('%Y%m%d_%H%M%S'))
         
-        filename = "_".join(parts) if parts else "default"
-        return f"{filename}.{self.config['file_extension']}"
+        filename = "_".join(parts) or "default"
+        return Path(self.config['log_folder']) / f"{filename}.{self.config['file_extension']}"
 
-    def _clean_old_logs(self) -> None:
-        """Pulizia automatica con pattern matching migliorato"""
-        if not self.config['max_log_files'] or self.config['max_log_files'] <= 0:
+    def _clean_old_logs(self, keep: Optional[int] = None) -> None:
+        """Pulizia automatica dei log"""
+        keep = keep or self.config['max_log_files']
+        if not keep or keep <= 0:
             return
 
-        log_folder = Path(self.config['log_folder'])
         pattern = f"{self.config['file_prefix']}*.{self.config['file_extension']}"
-        
         log_files = sorted(
-            log_folder.glob(pattern),
+            Path(self.config['log_folder']).glob(pattern),
             key=lambda f: f.stat().st_mtime,
             reverse=True
         )
 
-        for old_file in log_files[self.config['max_log_files']:]:
+        for old_file in log_files[keep:]:
             try:
                 old_file.unlink()
             except Exception as e:
-                logging.error(f"Errore cancellazione file {old_file}: {str(e)}")
+                logging.error(f"Errore cancellazione log: {str(e)}", exc_info=True)
 
 def configure_logging(**kwargs) -> LoggingConfigurator:
+    """Configura il sistema di logging
+    
+    :return: Istanza di LoggingConfigurator
+    """
     return LoggingConfigurator(**kwargs)
 
 def create_logger(name: Optional[str] = None) -> logging.Logger:
+    """Crea un logger configurato
+    
+    :param name: Nome del logger (default: nome del modulo corrente)
+    :return: Istanza di logging.Logger
+    """
     return logging.getLogger(name or __name__)
+
