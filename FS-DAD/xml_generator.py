@@ -16,7 +16,6 @@ import fnmatch
 import datetime
 from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
-import xml.etree.ElementTree as ET
 
 def create_xml_with_indent(
     target_path_folder,

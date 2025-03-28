@@ -1,12 +1,15 @@
 {
-    "target_path_folder0": "c:/sources/python-workspace",
-    "target_path_folder": "c:/sources/FlexCore-Workspace",
+    "target_path_folder": "c:/sources/python-workspace",
+    "target_path_folder1": "c:/sources/FlexCore-Workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
-    "split_content": true,
+    "split_content": false,
     "include_folders": [
         "*"
     ],
-    "include_folders1": [
+    "include_folders0": [
+        "FlexCore.Security.*"
+    ],
+    "include_folders2": [
         "FlexCore.Core.*",
         "FlexCore.Logging.*"        
     ],
@@ -14,7 +17,6 @@
         "Tests"
     ],
     "exclude_folders": [
-        "Tests",
         "bin",
         "obj",
         "debug",
