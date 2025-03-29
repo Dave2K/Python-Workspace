@@ -12,7 +12,7 @@ import os
 import json
 import datetime
 import re
-from _modules.logging.logging import configure_logging, create_logger
+from _modules.logging.logging import create_logger
 
 # Crea il logger utilizzando la tua classe di logging
 logger = create_logger(__name__)
@@ -23,69 +23,92 @@ class Config:
     
     Attributi:
         SUPPORTED_PLACEHOLDERS (list): Lista di placeholder supportati.
-        DEFAULT_FILE_NAME_CONFIG (str): Nome del file di configurazione di default.
-        config (dict): Dizionario che contiene la configurazione caricata.
-        config_file_path (str): Percorso del file di configurazione.
     
     Metodi:
         load(): Carica la configurazione da un file JSON.
         get(key): Ottiene il valore di una chiave di configurazione.
         get_output_file_path(target_path_folder, output_template): Calcola il percorso del file di output sostituendo i placeholder.
-        validate(): Metodo per validare la configurazione, da implementare nelle classi concrete.
-        to_dict(): Restituisce la configurazione come dizionario.
-        from_dict(data): Crea un'istanza da un dizionario.
     """
     
     SUPPORTED_PLACEHOLDERS = ["{target}", "{timestamp}"]
-    DEFAULT_FILE_NAME_CONFIG = "config.json"
+    ATTR_TO_DICT = "to_dict"
+    ATTR_FROM_DICT = "from_dict"
+    ATTR_CONFIG_FILE_PATH = "config_file_path"
 
-    def __init__(self, config_file_path=None):
-        """
-        Inizializza la configurazione.
-        Carica la configurazione dal file se esistente, altrimenti crea una configurazione di default.
 
-        :param config_file_path: Percorso del file di configurazione (opzionale)
-        """
-        self.config_file_path = config_file_path or Config.DEFAULT_FILE_NAME_CONFIG
-        self.config = {}
-        self.load()
+    # def __init__(self):
+    #     self.config = {}
 
-    def load(self):
+    def check_hasattr(self, object, method):
+        success = False
+        msg_err = None
+        try:
+            if hasattr(object, method):
+                success = True
+            else:
+                msg_err = f"Il metodo {method} nell'oggetto {object} non esiste!"
+        except NameError:
+            msg_err = f"L'oggetto {object} non esiste!"
+        
+        return success, msg_err
+                
+    def load(self, app_config_instance):
         """
         Carica la configurazione da un file JSON.
         Se il file non esiste, crea una configurazione di default.
 
-        :raises: json.JSONDecodeError, IOError se il file non è valido o non può essere letto.
+        :param config_file_path: Percorso del file di configurazione.
+        :return: Tupla (success: bool, msg: str)
         """
-        if os.path.exists(self.config_file_path):
-            try:
-                with open(self.config_file_path, "r") as f:
-                    self.config = json.load(f)
-                logger.debug(f"Configurazione caricata da {self.config_file_path}")
-            except (json.JSONDecodeError, IOError) as e:
-                logger.error(f"Errore caricamento config: {str(e)}")
+        success, msg = self.check_hasattr(app_config_instance, self.ATTR_CONFIG_FILE_PATH)
+        if success:
+            success, msg = self.check_hasattr(app_config_instance, self.ATTR_FROM_DICT)
+    
+        if success:
+            if os.path.exists(app_config_instance.config_file_path):
+                try:
+                    with open(app_config_instance.config_file_path, "r") as f:
+                        config_data = json.load(f)
+                    
+                    # Usa l'istanza di AppConfig per caricare la configurazione
+                    app_config_instance.from_dict(config_data)
+                    success = True
+                    msg = f"File di configurazione caricato: {app_config_instance.config_file_path}."
+                    logger.debug(msg)
+                except (json.JSONDecodeError, IOError) as e:
+                    msg = f"Errore durante il caricamento del file di configurazione: {str(e)}"
+                    logger.error(msg)
+            else:
+                msg = f"File di configurazione non trovato: {app_config_instance.config_file_path}."
+                logger.error(msg)
+        
+        return success, msg
 
-    def _write_file(self):
+    def write(self, app_config_instance):
         """
         Scrive la configurazione su un file JSON.
 
-        :raises: IOError se non è possibile scrivere sul file.
+        :param config_file_path: Percorso del file di configurazione.
+        :return: Tupla (success: bool, msg: str)
         """
-        try:
-            with open(self.config_file_path, "w") as f:
-                json.dump(self.config, f, indent=4)
-            logger.debug(f"Configurazione scritta su {self.config_file_path}")
-        except IOError as e:
-            logger.error(f"Errore durante la scrittura del file di configurazione: {str(e)}")
 
-    def get(self, key):
-        """
-        Restituisce il valore di una chiave nella configurazione.
+        # Controllo se esistono proprietà e metodi necessari su AppConfig
+        success, msg = self.check_hasattr(app_config_instance, self.ATTR_CONFIG_FILE_PATH)
+        if success:
+            success, msg = self.check_hasattr(app_config_instance, self.ATTR_TO_DICT)
 
-        :param key: La chiave da cercare nel dizionario di configurazione.
-        :return: Il valore associato alla chiave o None se non esiste.
-        """
-        return self.config.get(key)
+        if success:
+            try:
+                with open(app_config_instance.config_file_path, "w") as f:
+                    json.dump(app_config_instance.to_dict(), f, indent=4)
+                logger.debug(f"Configurazione scritta su {app_config_instance}")
+                success = True
+                msg = "Configurazione scritta con successo."
+            except IOError as e:
+                msg = f"Errore durante la scrittura del file di configurazione: {str(e)}"
+                logger.error(msg)
+
+        return success, msg
 
     def get_output_file_path(self, target_path_folder, output_template):
         """
@@ -137,31 +160,3 @@ class Config:
         :return: Lista dei placeholder trovati.
         """
         return re.findall(r"\{[^}]+\}", template)
-
-    def validate(self):
-        """
-        Valida la configurazione. Metodo da implementare nelle classi concrete.
-
-        :return: Tupla (successo: bool, messaggio: str).
-        """
-        raise NotImplementedError("Il metodo 'validate' deve essere implementato nella classe concreta")
-
-    def to_dict(self):
-        """
-        Restituisce la configurazione come un dizionario.
-
-        :return: Il dizionario della configurazione.
-        """
-        return self.config
-
-    @classmethod
-    def from_dict(cls, data):
-        """
-        Crea un'istanza della configurazione a partire da un dizionario.
-
-        :param data: Il dizionario con i dati di configurazione.
-        :return: Una tupla contenente l'istanza della configurazione, un booleano che indica se la creazione è riuscita, e un messaggio di stato.
-        """
-        config = cls()
-        config.config = data
-        return config, True, "Configurazione creata correttamente"

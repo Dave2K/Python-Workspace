@@ -5,7 +5,7 @@
             "name": "Esegui fs-dad.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/FS-DAD/fs-dad.py", 
+            "program": "${workspaceFolder}/FS-DAD/fs2dad.py", 
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [

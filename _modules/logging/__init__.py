@@ -1,4 +1,4 @@
-from .logging.logging import (
+from .logging import (
     LoggingConfigurator,
     ColoredFormatter,
     configure_logging,
