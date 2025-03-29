@@ -22,12 +22,12 @@ class AppConfig():
     INCLUDE_FOLDERS = "include_folders"
     EXCLUDE_FOLDERS = "exclude_folders"
     EXCLUDE_FILES = "exclude_files"
-    SPLIT_CONTENT = "split_content"
+    INDENT_CONTENT = "indent_content"
 
     DEFAULT_CONFIG = {
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
         OUTPUT_PATH_FILE: "{target}.xml",
-        SPLIT_CONTENT: False,
+        INDENT_CONTENT: False,
         INCLUDE_FOLDERS: ["*"],
         EXCLUDE_FOLDERS: [
             "bin", "obj", "debug", "release",
@@ -42,7 +42,6 @@ class AppConfig():
     }
 
     DEFAULT_FILE_NAME_CONFIG = "config.json"
-    MSG_INTERNAL_ERROR = "Errore Interno"
 
     def __init__(self, config_file_path=None):
         """
@@ -60,7 +59,7 @@ class AppConfig():
         self.include_folders = self.DEFAULT_CONFIG[self.INCLUDE_FOLDERS]
         self.exclude_folders = self.DEFAULT_CONFIG[self.EXCLUDE_FOLDERS]
         self.exclude_files = self.DEFAULT_CONFIG[self.EXCLUDE_FILES]
-        self.split_content = self.DEFAULT_CONFIG[self.SPLIT_CONTENT]
+        self.indent_content = self.DEFAULT_CONFIG[self.INDENT_CONTENT]
 
         # Log per segnalare l'inizializzazione
         logger.debug("Configurazione inizializzata con i valori di default.")
@@ -79,7 +78,7 @@ class AppConfig():
         self.include_folders = config_data.get(self.INCLUDE_FOLDERS, self.DEFAULT_CONFIG[self.INCLUDE_FOLDERS])
         self.exclude_folders = config_data.get(self.EXCLUDE_FOLDERS, self.DEFAULT_CONFIG[self.EXCLUDE_FOLDERS])
         self.exclude_files = config_data.get(self.EXCLUDE_FILES, self.DEFAULT_CONFIG[self.EXCLUDE_FILES])
-        self.split_content = config_data.get(self.SPLIT_CONTENT, self.DEFAULT_CONFIG[self.SPLIT_CONTENT])
+        self.indent_content = config_data.get(self.INDENT_CONTENT, self.DEFAULT_CONFIG[self.INDENT_CONTENT])
 
     def to_dict(self):
         """
@@ -94,7 +93,7 @@ class AppConfig():
             self.INCLUDE_FOLDERS: self.include_folders,
             self.EXCLUDE_FOLDERS: self.exclude_folders,
             self.EXCLUDE_FILES: self.exclude_files,
-            self.SPLIT_CONTENT: self.split_content
+            self.INDENT_CONTENT: self.indent_content
         }
 
     def validate(self):

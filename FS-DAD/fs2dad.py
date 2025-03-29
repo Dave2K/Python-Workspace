@@ -12,7 +12,6 @@ from pathlib import Path
 # Aggiungi la root del progetto al PYTHONPATH
 sys.path.append(str(Path(__file__).parent.parent))
 
-# Import dal modulo aggiornato
 from _modules.logging.logging import configure_logging, create_logger
 # Configurazione iniziale del sistema di logging
 # configure_logging(
@@ -54,7 +53,6 @@ configure_logging(
 logger = create_logger(__name__)
 
 # Import successivi
-import json
 import os
 import argparse
 from app_config import AppConfig 
@@ -93,38 +91,44 @@ def main():
     parser.add_argument("--target", help="Cartella target")
     parser.add_argument("--output", help="File output XML")
     parser.add_argument("--include", help="Pattern inclusione cartelle (separati da virgola)")
-    parser.add_argument("--split-content", help="Parametro opzionale per gestire il contenuto")
+    parser.add_argument("--indent-content", help="Parametro opzionale per indentare il contenuto")
     args = parser.parse_args()
 
     # Caricamento configurazione
     config_file = os.path.normpath(args.config)
-    config, msg = load_or_create_config(config_file)
-    if not config:
+    app_config, msg = load_or_create_config(config_file)
+    if not app_config:
         logger.error(f"Errore configurazione: {msg}")
         return
 
     # Gestione parametri
-    target_path = os.path.normpath(args.target or config.target_path_folder)
+    target_path = os.path.normpath(args.target or app_config.target_path_folder)
     if os.path.isfile(target_path):
         logger.error(f"{target_path} è un file, deve essere una cartella")
         return
     elif not os.path.exists(target_path):
         logger.error(f"Cartella non trovata: {target_path}")
-        return                  
+        return
+    app_config.target_path_folder = target_path            
 
-    output_file = args.output or config.config_instance.get_output_file_path(target_path, config.output_path_file)
-    include_folders = args.include.split(",") if args.include else config.include_folders
-    split_content = args.split_content if args.split_content else config.split_content
+    output_file = args.output or app_config.config_instance.get_output_file_path(
+        app_config.target_path_folder, 
+        app_config.output_path_file)
+    
+    include_folders = args.include.split(",") if args.include else app_config.include_folders
+    
+    indent_content = args.indent_content if args.indent_content else app_config.indent_content
 
     # Generazione XML
     success, message = create_xml_with_indent(
-        target_path_folder=target_path,
+        app_config=app_config,
+        target_path_folder=app_config.target_path_folder,
         output_file=output_file,
-        ignore_folders=config.exclude_folders,
-        ignore_files=config.exclude_files,
+        ignore_folders=app_config.exclude_folders,
+        ignore_files=app_config.exclude_files,
         indent="  ",
         include_folders=include_folders,
-        split_content=split_content
+        indent_content=indent_content
     )
     if(success):
         logger.info(message)

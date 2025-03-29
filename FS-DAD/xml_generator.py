@@ -5,11 +5,8 @@ Generatore XML con supporto a:
 - CDATA per file di testo
 - vuoto per file binari (non riconosciuti come testo)
 """
-##
-from _modules.logging.logging import configure_logging, create_logger
+from _modules.logging.logging import create_logger
 logger = create_logger(__name__)
-##
-
 
 import os
 import fnmatch
@@ -18,13 +15,14 @@ from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
 
 def create_xml_with_indent(
+    app_config,    
     target_path_folder,
     output_file,
     ignore_folders=[],
     ignore_files=[],
     indent="",
     include_folders=[ "*" ],
-    split_content=True
+    indent_content=True
 ):
     """
     Genera un XML rappresentante la struttura del filesystem.
@@ -41,7 +39,7 @@ def create_xml_with_indent(
             file_handler_instance : FileHandler,
             indent_level,
             indent="", 
-            split_content=True 
+            indent_content=True 
         ):
         """
         Elabora il contenuto del file per l'inserimento in XML.
@@ -61,20 +59,15 @@ def create_xml_with_indent(
         if content_file:
             is_text, msg_err = fh.is_text()
             if is_text:
-                if split_content:
-                    indent_str = indent * (indent_level + 1)                
+                if indent_content:
+                    indent_str = indent * (indent_level + 2)                
 
                     lines = content_file.splitlines()
 
                     formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)                
                     content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str}]]>"
                 else:
-                    try:
-                        content_encoded = content_file.encode(fh.encoding)
-                    except Exception as e:
-                        msg_err = f"Errore encode {str(e)}"
-                        logger.error(msg_err)
-                    content_processed = f"<![CDATA[{content_encoded}]]>"
+                    content_processed = f"<![CDATA[{content_file}]]>"
             else:
                 msg = f"File riconsciuto come binario Mime: {fh.mime}  Encoding: {fh.encoding}  File: {fh.file_path} msg_err: {msg_err}"
                 content_processed = msg
@@ -92,7 +85,7 @@ def create_xml_with_indent(
             ignore_folders=[], ignore_files=[], 
             include_folders=["*"], 
             allow_files=False, 
-            split_content=True
+            indent_content=True
         ):
         """
         Aggiunge elementi all'XML in modo ricorsivo, ignorando le cartelle e i file specificati. 
@@ -133,7 +126,7 @@ def create_xml_with_indent(
                 add_element(folder_node, entry_path, 
                             indent_level + 1, 
                             ignore_folders, ignore_files, include_folders, 
-                            allow_files, split_content)
+                            allow_files, indent_content)
 
             # Se è un file
             else:
@@ -162,7 +155,7 @@ def create_xml_with_indent(
                     indent_level += 1
 
                     try:
-                        content, msg_err = process_content(fh, indent_level + 1, indent, split_content)
+                        content, msg_err = process_content(fh, indent_level + 1, indent, indent_content)
                     except Exception as e:
                         msg_err = f"Errore elaborazione processo contenuto: {str(e)}"
                         content = ""
@@ -206,7 +199,7 @@ def create_xml_with_indent(
         ignore_folders=ignore_folders, 
         ignore_files=ignore_files, 
         include_folders=include_folders,
-        split_content=split_content
+        indent_content=indent_content
     )
     
     # Scrittura file

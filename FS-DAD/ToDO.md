@@ -2,6 +2,10 @@
 
 manca controllo campi config obbligatori
 
+rivedere main per valorizzare config con i parametro cli
+xml_generator(config, inndent)
+
+
 include_folders
     "include_folders": [
         "*"
@@ -20,6 +24,9 @@ implementare dentro xmlnode
     cdata
     write con parametro encode , default utf8
     load
+    search
+    replace
+    remove
 
 
 ricontrollare bene i parametri obbligatori

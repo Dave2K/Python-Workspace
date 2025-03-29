@@ -9,7 +9,7 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
-                "--config", "${workspaceFolder}/FS-DAD/config.json"
+                "--config", "${workspaceFolder}/FS-DAD/config2.json"
             ]
         },
         {
