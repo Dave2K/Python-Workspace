@@ -1,5 +1,7 @@
 # ToDO
 
+manca controllo campi config obbligatori
+
 include_folders
     "include_folders": [
         "*"
