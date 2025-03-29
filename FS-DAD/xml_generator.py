@@ -5,6 +5,7 @@ Generatore XML con supporto a:
 - CDATA per file di testo
 - vuoto per file binari (non riconosciuti come testo)
 """
+import re
 from _modules.logging.logging import create_logger
 logger = create_logger(__name__)
 
@@ -13,9 +14,9 @@ import fnmatch
 import datetime
 from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
+import xml.etree.ElementTree as ET
 
-def create_xml_with_indent(
-    app_config,    
+def create_xml_with_indent(    
     target_path_folder,
     output_file,
     ignore_folders=[],
@@ -68,8 +69,15 @@ def create_xml_with_indent(
                     content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str}]]>"
                 else:
                     content_processed = f"<![CDATA[{content_file}]]>"
+                    
+                    # try:
+                    #     content_encoded = content_file.encode(fh.encoding)[2:-1]
+                    # except Exception as e:
+                    #     msg_err = f"Errore encode {str(e)}"
+                    #     logger.error(msg_err)
+                    # content_processed = f"<![CDATA[{content_encoded}]]>"
             else:
-                msg = f"File riconsciuto come binario Mime: {fh.mime}  Encoding: {fh.encoding}  File: {fh.file_path} msg_err: {msg_err}"
+                msg = f"File riconosciuto come binario Mime: {fh.mime}  Encoding: {fh.encoding}  File: {fh.file_path} msg_err: {msg_err}"
                 content_processed = msg
                 logger.warning(msg)
         else:
@@ -202,9 +210,11 @@ def create_xml_with_indent(
         indent_content=indent_content
     )
     
+    content_xml = f'<?xml version="1.0" encoding="utf-8"?>\n{node_dad.to_xml(indent=indent)}'
+    content_file = content_xml
     # Scrittura file
     with open(output_file, "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="utf-8"?>\n')
-        f.write(node_dad.to_xml(indent=indent))
+        # f.write('<?xml version="1.0" encoding="utf-8"?>\n')
+        f.write(content_file)
 
     return True, f"XML generato: {output_file}"

@@ -121,12 +121,11 @@ def main():
 
     # Generazione XML
     success, message = create_xml_with_indent(
-        app_config=app_config,
         target_path_folder=app_config.target_path_folder,
         output_file=output_file,
         ignore_folders=app_config.exclude_folders,
         ignore_files=app_config.exclude_files,
-        indent="  ",
+        indent= "  " if app_config.indent_content else "",
         include_folders=include_folders,
         indent_content=indent_content
     )

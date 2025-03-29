@@ -20,7 +20,7 @@ class XMLNode:
         """Imposta il testo del nodo."""
         self.text = text
 
-    def to_xml(self, indent_level=0, indent="    "):
+    def to_xml(self, indent_level=0, indent=""):
         """Converte il nodo in stringa XML."""
         indent_str = indent * indent_level
         attrs = " ".join([f'{k}="{v}"' for k, v in self.attributes.items()])
@@ -38,4 +38,4 @@ class XMLNode:
             xml_content.append(child.to_xml(indent_level + 1, indent))
         xml_content.append(closing_tag)
 
-        return "\n".join(xml_content)
+        return ("" if indent == "" else "\n").join(xml_content)
