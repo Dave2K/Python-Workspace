@@ -38,4 +38,6 @@ class XMLNode:
             xml_content.append(child.to_xml(indent_level + 1, indent))
         xml_content.append(closing_tag)
 
-        return ("" if indent == "" else "\n").join(xml_content)
+        # return ("" if indent == "" else "\n").join(xml_content)
+        separator = "" if not indent else "\n"
+        return separator.join(xml_content)

@@ -92,6 +92,8 @@ def main():
     parser.add_argument("--output", help="File output XML")
     parser.add_argument("--include", help="Pattern inclusione cartelle (separati da virgola)")
     parser.add_argument("--indent-content", help="Parametro opzionale per indentare il contenuto")
+    parser.add_argument("--include-files", help="Pattern inclusione file (separati da virgola)")  # <-- UNICA MODIFICA 1/3
+    
     args = parser.parse_args()
 
     # Caricamento configurazione
@@ -116,6 +118,7 @@ def main():
         app_config.output_path_file)
     
     include_folders = args.include.split(",") if args.include else app_config.include_folders
+    include_files = args.include_files.split(",") if args.include_files else app_config.include_files  # <-- UNICA MODIFICA 2/3
     
     indent_content = args.indent_content if args.indent_content else app_config.indent_content
 
@@ -127,7 +130,8 @@ def main():
         ignore_files=app_config.exclude_files,
         indent= "  " if app_config.indent_content else "",
         include_folders=include_folders,
-        indent_content=indent_content
+        indent_content=indent_content,
+        include_files=include_files  # <-- UNICA MODIFICA 3/3
     )
     if(success):
         logger.info(message)

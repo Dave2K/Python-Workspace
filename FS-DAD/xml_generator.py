@@ -5,10 +5,11 @@ Generatore XML con supporto a:
 - CDATA per file di testo
 - vuoto per file binari (non riconosciuti come testo)
 """
-import re
-from _modules.logging.logging import create_logger
-logger = create_logger(__name__)
+from _modules.logging.logging import create_logger  # <-- POSIZIONE ORIGINALE
+logger = create_logger(__name__)  # <-- POSIZIONE ORIGINALE
 
+# Altri import ESATTAMENTE come nel tuo codice originale
+import re
 import os
 import fnmatch
 import datetime
@@ -16,39 +17,71 @@ from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
 import xml.etree.ElementTree as ET
 
+# def glob_to_regex(pattern: str) -> str:
+#     """Converte pattern glob in regex, supportando * e **."""
+#     pattern = pattern.replace("\\", "/")
+    
+#     # Caso speciale: pattern "*" deve matchare qualsiasi cartella/file
+#     if pattern == "*":
+#         return r"^.*$"  # Match completo
+    
+#     pattern = pattern.replace("**", "<GLOB_STAR>")
+#     regex = re.escape(pattern)
+#     regex = regex.replace("<GLOB_STAR>", ".*")
+#     regex = regex.replace(r"\*", "[^/\\\\]*")  # Match qualsiasi carattere tranne / o \
+#     regex = regex.replace(r"\/", r"[/\\]")      # Match esplicito per / o \
+#     return f"^{regex}$"
+def glob_to_regex(pattern: str) -> str:
+    """Converte pattern glob in regex, supportando * e **.
+    
+    Args:
+        pattern: Stringa glob da convertire (es. "**/*.py")
+        
+    Returns:
+        Stringa regex con flag case-insensitive (?i)
+    """
+    pattern = pattern.replace("\\", "/")
+    
+    # Caso speciale: pattern "*" deve matchare qualsiasi cartella/file
+    if pattern == "*":
+        return r"(?i)^.*$"  # Aggiunto (?i) per ignorecase
+    
+    pattern = pattern.replace("**", "<GLOB_STAR>")
+    regex = re.escape(pattern)
+    regex = regex.replace("<GLOB_STAR>", ".*")
+    regex = regex.replace(r"\*", "[^/\\\\]*")  # Match qualsiasi carattere tranne / o \
+    regex = regex.replace(r"\/", r"[/\\]")      # Match esplicito per / o \
+    
+    return f"(?i)^{regex}$"  # Aggiunto (?i) all'inizio per ignorecase
+
 def create_xml_with_indent(    
-    target_path_folder,
-    output_file,
-    ignore_folders=[],
-    ignore_files=[],
-    indent="",
-    include_folders=[ "*" ],
-    indent_content=True
-):
+    target_path_folder: str,
+    output_file: str,
+    ignore_folders: list = [],
+    ignore_files: list = [],
+    indent: str = "",
+    include_folders: list = ["*"],
+    indent_content: bool = True,
+    include_files: list = []
+) -> tuple:
     """
     Genera un XML rappresentante la struttura del filesystem.
+    
     :param target_path_folder: Percorso della cartella da analizzare
     :param output_file: Percorso del file XML di output
     :param ignore_folders: Lista di cartelle da ignorare
     :param ignore_files: Lista di file da ignorare
     :param indent: Stringa di indentazione
     :param include_folders: Lista di pattern per includere cartelle
+    :param indent_content: Flag per indentare il contenuto
+    :param include_files: Lista di pattern per includere file
     :return: Tupla (successo: bool, messaggio: str)
     """
-    
-    def process_content(
-            file_handler_instance : FileHandler,
-            indent_level,
-            indent="", 
-            indent_content=True 
-        ):
-        """
-        Elabora il contenuto del file per l'inserimento in XML.
-        :param file_info: Dizionario con le informazioni del file
-        :param indent_level: Livello di indentazione
-        :param indent: Stringa di indentazione (default: 2 spazi)
-        :return: Contenuto formattato per CDATA
-        """
+    include_folder_regex = [re.compile(glob_to_regex(p)) for p in include_folders]
+    exclude_folder_regex = [re.compile(glob_to_regex(p)) for p in ignore_folders]
+    include_file_regex = [re.compile(glob_to_regex(p)) for p in include_files]
+
+    def process_content(file_handler_instance: FileHandler, indent_level: int, indent: str, indent_content: bool):
         fh = file_handler_instance
         if not fh.has_info_been_read:
             fh.get_info()
@@ -61,160 +94,125 @@ def create_xml_with_indent(
             is_text, msg_err = fh.is_text()
             if is_text:
                 if indent_content:
-                    indent_str = indent * (indent_level + 2)                
-
+                    indent_str = indent * (indent_level + 2)
                     lines = content_file.splitlines()
-
-                    formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)                
+                    formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)
                     content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str}]]>"
                 else:
                     content_processed = f"<![CDATA[{content_file}]]>"
-                    
-                    # try:
-                    #     content_encoded = content_file.encode(fh.encoding)[2:-1]
-                    # except Exception as e:
-                    #     msg_err = f"Errore encode {str(e)}"
-                    #     logger.error(msg_err)
-                    # content_processed = f"<![CDATA[{content_encoded}]]>"
             else:
-                msg = f"File riconosciuto come binario Mime: {fh.mime}  Encoding: {fh.encoding}  File: {fh.file_path} msg_err: {msg_err}"
+                msg = f"File binario: {fh.file_path} (MIME: {fh.mime}, Encoding: {fh.encoding})"
                 content_processed = msg
                 logger.warning(msg)
         else:
-            msg = f"Lettura file: {fh.name} errore: {msg_err}"
+            msg = f"Errore lettura file: {fh.file_path} - {msg_err}"
             logger.error(msg)
-
         return content_processed, msg_err
 
     def add_element(
-            parent, 
-            current_dir, 
-            indent_level, 
-            ignore_folders=[], ignore_files=[], 
-            include_folders=["*"], 
-            allow_files=False, 
-            indent_content=True
+            parent: XMLNode, 
+            current_dir: str, 
+            indent_level: int, 
+            ignore_folders: list, 
+            ignore_files: list, 
+            include_folder_regex: list, 
+            root_path: str,
+            indent_content: bool,
+            include_file_regex: list
         ):
-        """
-        Aggiunge elementi all'XML in modo ricorsivo, ignorando le cartelle e i file specificati. 
-        Forza l'inclusione di tutte le cartelle e i file, tranne quelli in ignore_folders e ignore_files.
+        abs_path = os.path.abspath(current_dir).replace("\\", "/")  # Percorso assoluto normalizzato
+        
+        # CASE SENSITIVE
+        is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)  # Usa search(), non match()
+        is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)
+        # CASE INSENITIVE
+        # is_folder_included = any(
+        #     re.search(rgx, abs_path, re.IGNORECASE)  # <-- AGGIUNTO FLAG
+        #     for rgx in include_folder_regex
+        # )
+        # is_folder_excluded = any(
+        #     re.search(rgx, abs_path, re.IGNORECASE)  # <-- AGGIUNTO FLAG
+        #     for rgx in exclude_folder_regex
+        # )
 
-        :param parent: Nodo XML genitore
-        :param current_dir: Cartella corrente
-        :param indent_level: Livello di indentazione
-        :param ignore_folders: Lista di cartelle da ignorare
-        :param ignore_files: Lista di file da ignorare
-        :param include_folders: Lista di pattern per includere cartelle
-        :param allow_files: Se True, permette il processamento dei file anche se la cartella non matcha include_folders
-        """
-        # Verifica se la cartella corrente matcha con include_folders
-        current_folder_matches = any(fnmatch.fnmatch(os.path.basename(current_dir), pattern) for pattern in include_folders)
-        allow_files = allow_files or current_folder_matches
+        if not is_folder_included or is_folder_excluded:
+            return
 
-        # Ottieni il nome della cartella corrente
-        dir_name = os.path.basename(current_dir)
-        logger.debug(f"Elaborazione della cartella: {dir_name}")
-
-        # Crea il nodo XML per la cartella corrente
-        folder_node = XMLNode("Folder", {"Name": dir_name})
+        folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
         parent.add_child(folder_node)
+        indent_level += 1
 
-        # Elabora tutte le cartelle e i file nella cartella corrente
-        for entry in os.listdir(current_dir):
-            entry_path = os.path.join(current_dir, entry)
-
-            # Se è una cartella
-            if os.path.isdir(entry_path):
-                # Verifica se la cartella deve essere ignorata
-                if any(fnmatch.fnmatch(entry, pattern) for pattern in ignore_folders):
-                    logger.debug(f"Ignorata cartella: {entry}")
-                    continue
-
-                # Aggiungi la cartella all'XML (ricorsivamente)
-                add_element(folder_node, entry_path, 
-                            indent_level + 1, 
-                            ignore_folders, ignore_files, include_folders, 
-                            allow_files, indent_content)
-
-            # Se è un file
+        # for entry in os.scandir(current_dir):
+        for entry in sorted(os.scandir(current_dir), key=lambda e: e.name.lower()):
+            entry_path = os.path.join(current_dir, entry.name)
+            
+            if entry.is_dir():
+                add_element(
+                    folder_node, 
+                    entry_path, 
+                    indent_level, 
+                    ignore_folders, 
+                    ignore_files, 
+                    include_folder_regex, 
+                    root_path, 
+                    indent_content,
+                    include_file_regex
+                )
             else:
-                # Verifica se il file deve essere ignorato
-                if any(fnmatch.fnmatch(entry, pattern) for pattern in ignore_files):
-                    logger.debug(f"Ignorato file: {entry}")
+                file_name = entry.name
+                is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)
+                is_file_excluded = any(fnmatch.fnmatch(file_name, p) for p in ignore_files)
+                
+                if not is_file_included or is_file_excluded:
                     continue
 
-                # Se allow_files è True, processa il file
-                if allow_files:
-                    # Ottieni le informazioni del file
-                    fh = FileHandler(entry_path)
-                    result, msg_err = fh.exists()                    
-                    if not result:
-                        logger.warning(f"File non trovato: {fh.nameentry}: {msg_err}")
-                        continue
+                fh = FileHandler(entry_path)
+                if not fh.exists()[0]:
+                    continue
+                fh.get_info()
 
-                    fh.get_info()
+                node_file = XMLNode("File", {"Name": fh.name, "Size": str(fh.size)})
+                content, msg_err = process_content(fh, indent_level + 1, indent, indent_content)
+                
+                node_content = XMLNode("Content", {
+                    "MIME": fh.mime,
+                    "Encoding": fh.encoding
+                })
+                if fh.bom:
+                    node_content.attributes["BOM"] = "True"
+                
+                node_content.set_text(content)
+                node_file.add_child(node_content)
+                folder_node.add_child(node_file)
 
-                    # Crea il nodo XML per il file
-                    attributes = {
-                        "Name": fh.name,
-                        "Size": str(fh.size),
-                    }
-                    node_file = XMLNode("File", attributes)
-                    indent_level += 1
-
-                    try:
-                        content, msg_err = process_content(fh, indent_level + 1, indent, indent_content)
-                    except Exception as e:
-                        msg_err = f"Errore elaborazione processo contenuto: {str(e)}"
-                        content = ""
-                        logger.error(msg_err)
-
-                    # Crea il nodo content
-                    attributes = {
-                        "MIME": fh.mime,
-                        "Encoding": fh.encoding
-                    }
-                    if fh.bom:
-                        attributes["BOM"] = "True"
-                    node_content = XMLNode("Content", attributes)
-                    indent_level += 1
-                    node_content.set_text(content)
-                    node_file.add_child(node_content); indent_level -= 1
-
-                    folder_node.add_child(node_file); indent_level -= 1   
-   
-    # Struttura base XML    
-    node_dad = XMLNode("DataArchitectureDesign", {
-        "Author": "Davide"
-        })
+    node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
     indent_initial_level = 0
 
     node_creation = XMLNode("Creation", {
         "Date": datetime.datetime.now().strftime("%d-%m-%Y"),
         "Hour": datetime.datetime.now().strftime("%H:%M:%S")
-        })
+    })
     node_dad.add_child(node_creation)
     indent_initial_level += 1
-
+    
     node_filesystem = XMLNode("FileSystem")
     node_dad.add_child(node_filesystem)
     indent_initial_level += 1
-
-    add_element(
-        parent=node_filesystem, 
-        current_dir=target_path_folder, 
-        indent_level=indent_initial_level, 
-        ignore_folders=ignore_folders, 
-        ignore_files=ignore_files, 
-        include_folders=include_folders,
-        indent_content=indent_content
-    )
     
-    content_xml = f'<?xml version="1.0" encoding="utf-8"?>\n{node_dad.to_xml(indent=indent)}'
-    content_file = content_xml
-    # Scrittura file
-    with open(output_file, "w", encoding="utf-8") as f:
-        # f.write('<?xml version="1.0" encoding="utf-8"?>\n')
-        f.write(content_file)
+    add_element(
+        node_filesystem, 
+        target_path_folder, 
+        indent_initial_level, 
+        ignore_folders, 
+        ignore_files, 
+        include_folder_regex, 
+        target_path_folder, 
+        indent_content,
+        include_file_regex
+    )
 
+    content_xml = f'<?xml version="1.0" encoding="utf-8"?>\n{node_dad.to_xml(indent=indent)}'
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(content_xml)
+    
     return True, f"XML generato: {output_file}"

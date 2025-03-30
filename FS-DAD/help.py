@@ -1,49 +1,55 @@
 """
-Modulo per visualizzare le informazioni di aiuto del programma.
-Include esempi pratici per ogni opzione.
+Modulo per visualizzare l'aiuto avanzato con documentazione sui pattern
 """
 
-def display_help(name_main):
-    """
-    Mostra le informazioni di aiuto per l'uso del programma.
-    :param name_main: Nome del file principale
-    """
+def display_help(name_main: str):
     help_text = f"""
-    Utilizzo:
-      python {name_main} [OPZIONI]
+    UTILIZZO AVANZATO: Pattern Matching
 
-    Opzioni:
-      --config <file>    Specifica un file di configurazione (default: config.json)
-      --target <dir>     Specifica la directory da analizzare
-      --output <file>    Specifica il file XML di output
-      --include <pat>    Processa solo le cartelle che corrispondono al pattern
-      --help             Mostra questo messaggio di aiuto
+    ╔══════════════════════════╦══════════════════════════════════════╗
+    ║       PATTERN GLOB       ║             DESCRIZIONE              ║
+    ╠══════════════════════════╬══════════════════════════════════════╣
+    ║ *                       ║ Match qualsiasi nome in un livello   ║
+    ║ **                      ║ Match ricorsivo qualsiasi livello    ║
+    ║ cartella                ║ Match esatto del nome                ║
+    ║ **/cartella             ║ Match cartella in qualsiasi posizione║
+    ║ *.ext                   ║ Match estensione specifica           ║
+    ║ **/*.ext                ║ Match estensione in qualsiasi path   ║
+    ╚══════════════════════════╩══════════════════════════════════════╝
 
-    Esempi:
-      1. Analizza una cartella specifica:
-         python {name_main} --target "c:\\sources\\FS-DAD"
+    GERARCHIA DI APPLICAZIONE:
+    1. Se la cartella NON è in include_folders → Salta tutto
+    2. Se la cartella è in exclude_folders → Salta tutto
+    3. Altrimenti controlla i file:
+       - File NON in include_files → Salta
+       - File in exclude_files → Salta
+       - Altrimenti processa
 
-      2. Genera un file XML con un nome specifico:
-         python {name_main} --target "c:\\sources\\FS-DAD" --output "output.xml"
+    ESEMPI PRATICI:
+    ► Escludere TUTTA una cartella:
+      {{
+        "exclude_folders": ["**/_artifacts"]
+      }}
 
-      3. Usa un file di configurazione personalizzato:
-         python {name_main} --config "custom_config.json"
+    ► Escludere solo i contenuti:
+      {{
+        "exclude_files": ["**/_artifacts/**"]
+      }}
 
-      4. Includi solo cartelle che corrispondono a un pattern:
-         python {name_main} --include "src/*,tests/*"
+    ► Include/Exclude combinato:
+      {{
+        "include_folders": ["**/src/**"],
+        "exclude_folders": ["**/temp"],
+        "exclude_files": ["*.log"]
+      }}
 
-      5. Escludi cartelle specifiche:
-         Modifica il file config.json e aggiungi le cartelle da escludere
-         sotto la chiave "exclude_folders".
-
-    Configurazione:
-      Modifica il file config.json per specificare:
-        - target_path_folder: Directory da analizzare
-        - output_file: File XML di output
-        - exclude_dirs: Directory da escludere
-        - exclude_files: File da escludere
-        - include_folders: Pattern per includere cartelle
-
-      Nota: I parametri CLI sovrascrivono quelli nel file di configurazione.
+    UTILIZZO BASE:
+    python {name_main} [OPZIONI]
+    
+    OPZIONI:
+      --config <file>    File di configurazione JSON
+      --target <dir>     Directory da analizzare
+      --output <file>    File XML di output
+      --help             Mostra questo messaggio
     """
     print(help_text)
