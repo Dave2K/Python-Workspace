@@ -94,10 +94,11 @@ def create_xml_with_indent(
             is_text, msg_err = fh.is_text()
             if is_text:
                 if indent_content:
-                    indent_str = indent * (indent_level + 2)
+                    indent_str = indent * (indent_level + 1)
                     lines = content_file.splitlines()
                     formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)
-                    content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str}]]>"
+                    indent_str_closed_tag = indent * indent_level
+                    content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str_closed_tag}]]>"
                 else:
                     content_processed = f"<![CDATA[{content_file}]]>"
             else:
@@ -123,18 +124,9 @@ def create_xml_with_indent(
         abs_path = os.path.abspath(current_dir).replace("\\", "/")  # Percorso assoluto normalizzato
         
         # CASE SENSITIVE
-        is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)  # Usa search(), non match()
+        is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)
         is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)
-        # CASE INSENITIVE
-        # is_folder_included = any(
-        #     re.search(rgx, abs_path, re.IGNORECASE)  # <-- AGGIUNTO FLAG
-        #     for rgx in include_folder_regex
-        # )
-        # is_folder_excluded = any(
-        #     re.search(rgx, abs_path, re.IGNORECASE)  # <-- AGGIUNTO FLAG
-        #     for rgx in exclude_folder_regex
-        # )
-
+        
         if not is_folder_included or is_folder_excluded:
             return
 
@@ -172,15 +164,18 @@ def create_xml_with_indent(
                 fh.get_info()
 
                 node_file = XMLNode("File", {"Name": fh.name, "Size": str(fh.size)})
-                content, msg_err = process_content(fh, indent_level + 1, indent, indent_content)
-                
+                indent_level += 1
+
                 node_content = XMLNode("Content", {
                     "MIME": fh.mime,
                     "Encoding": fh.encoding
                 })
                 if fh.bom:
                     node_content.attributes["BOM"] = "True"
-                
+                indent_level += 1
+
+                content, msg_err = process_content(fh, indent_level, indent, indent_content)
+
                 node_content.set_text(content)
                 node_file.add_child(node_content)
                 folder_node.add_child(node_file)

@@ -41,3 +41,44 @@ class XMLNode:
         # return ("" if indent == "" else "\n").join(xml_content)
         separator = "" if not indent else "\n"
         return separator.join(xml_content)
+
+    def sanitize_cdata_content(content: str | bytes) -> str:
+        """Pulisce il contenuto per renderlo sicuro in un blocco CDATA XML.
+        
+        Args:
+            content: Contenuto originale (str o bytes)
+            
+        Returns:
+            Stringa sanificata e pronta per CDATA
+        """
+        # Decodifica se è bytes (usa replace per caratteri non validi)
+        if isinstance(content, bytes):
+            try:
+                content = content.decode('utf-8', errors='replace')
+            except UnicodeDecodeError:
+                content = content.decode('latin-1', errors='replace')
+
+        # Lista di sostituzioni per sequenze pericolose
+        replacements = {
+            ']]>': ']]]]><![CDATA[>',  # Previene chiusura prematura
+            '--': '&#45;&#45;',         # Evita conflitti con commenti XML
+            '\x00': '[NULL]',           # Carattere null (ASCII 0)
+            '\x0B': '[VT]',             # Vertical Tab (ASCII 11)
+            '\x0C': '[FF]'              # Form Feed (ASCII 12)
+        }
+
+        # Applica le sostituzioni
+        for seq, replacement in replacements.items():
+            content = content.replace(seq, replacement)
+
+        # Filtra caratteri di controllo non validi (ASCII 0x00-0x1F)
+        cleaned_chars = []
+        for char in content:
+            if 31 < ord(char) < 127:
+                cleaned_chars.append(char)
+            elif char in {'\t', '\n', '\r'}:
+                cleaned_chars.append(char)
+            else:
+                cleaned_chars.append(f'[CTRL-{ord(char):02X}]')
+        
+        return ''.join(cleaned_chars)
