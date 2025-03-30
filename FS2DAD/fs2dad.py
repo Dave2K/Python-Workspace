@@ -21,12 +21,15 @@ configure_logging(
     log_folder="_logs",
     log_level=logging.DEBUG,
     enable_console_logging=True,
-    console_level=logging.INFO,
+    console_level=logging.DEBUG,
     file_prefix="",
     max_log_files=5
 )
-
 logger = create_logger(__name__)
+
+# sopprime il log, lo porta a CRITICAL
+logging.getLogger('charset_normalizer').setLevel(logging.CRITICAL)
+
 
 def apply_cli_overrides(app_config, args):
     """Applica i parametri CLI alla configurazione"""
@@ -71,7 +74,6 @@ def main():
         show_full_help()
         return
 
-    # try:
     # Caricamento config
     app_config = AppConfig(config_path)
     success, msg = app_config.load()
@@ -96,17 +98,12 @@ def main():
         output_file=app_config.output_path_file,
         ignore_folders=app_config.exclude_folders,
         ignore_files=app_config.exclude_files,
-        indent="  " if app_config.indent_content else "",
+        indent_chars="  " if app_config.indent_content else "",
         include_folders=app_config.include_folders,
         include_files=app_config.include_files
     )
 
     logger.info(f"🎉 {message}" if success else f"❌ {message}")
-
-    # except ValueError as e:
-    #     logger.error(f"❌ Errore validazione:\n{str(e)}")
-    # except Exception as e:
-    #     logger.error(f"🔥 Errore critico: {str(e)}", exc_info=True)
 
 if __name__ == "__main__":
     main()

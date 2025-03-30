@@ -41,9 +41,9 @@ class XMLNode:
         self.content.is_text = True
         self.content.is_cdata = False
 
-    def to_xml(self, indent_level=0, indent=""):
+    def to_xml(self, indent_level=0, indent_chars=""):
         """Converte il nodo in stringa XML."""
-        indent_str = indent * indent_level
+        indent_str = indent_chars * indent_level
         attrs = " ".join([f'{k}="{v}"' for k, v in self.attributes.items()])
 
         if not self.children and not self.content.text:
@@ -55,8 +55,8 @@ class XMLNode:
         xml_content = [opening_tag]
         if self.content.text:
             text_sanitized = self.sanitize_xml(self.content.text)
-            indent_str_content = indent * (indent_level + 1)
-            if indent:
+            indent_str_content = indent_chars * (indent_level + 1)
+            if indent_chars:
                 lines = text_sanitized.splitlines()
                 _text = "\n".join(f"{indent_str_content}{line}" for line in lines)
                 xml_content.append(f"{_text}")
@@ -65,11 +65,10 @@ class XMLNode:
                 xml_content.append(f"{indent_str_content}{_text}")
 
         for child in self.children:
-            xml_content.append(child.to_xml(indent_level + 1, indent))
+            xml_content.append(child.to_xml(indent_level + 1, indent_chars))
         xml_content.append(closing_tag)
 
-        # return ("" if indent == "" else "\n").join(xml_content)
-        separator = "" if not indent else "\n"
+        separator = "" if not indent_chars else "\n"
         return separator.join(xml_content)
 
     def sanitize_xml(self, text: str) -> str:
