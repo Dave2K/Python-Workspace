@@ -24,16 +24,7 @@ class AppConfig():
     EXCLUDE_FILES = "exclude_files"
     INDENT_CONTENT = "indent_content"
     INCLUDE_FILES = "include_files"
-
-    # Campi obbligatori
-    REQUIRED_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
-    # Campi che devono essere percorsi validi
-    FILE_PATH_FIELDS = [TARGET_PATH_FOLDER]
-    # Campi che devono essere liste
-    LIST_FIELDS = [INCLUDE_FOLDERS, EXCLUDE_FOLDERS, EXCLUDE_FILES]
-    # Campi che devono avere le cartelle valide
-    PATH_FIELDS = [OUTPUT_PATH_FILE]
-
+    
     DEFAULT_CONFIG = {
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
         OUTPUT_PATH_FILE: "{target}.xml",
@@ -110,48 +101,6 @@ class AppConfig():
             self.INCLUDE_FILES: self.include_files
         }
 
-    def validate(self):
-        """
-        Valida i parametri di configurazione.
-        Solleva un ValueError se si riscontrano problemi.
-        """
-        errors = []
-
-        # Controllo campi obbligatori
-        for field in self.REQUIRED_FIELDS:
-            if not getattr(self, field, None):
-                errors.append(f"Il campo {field} è obbligatorio e non può essere vuoto.")
-
-        # Controllo che i percorsi siano validi
-        for field in self.FILE_PATH_FIELDS:
-            file_path_value = getattr(self, field, None)
-            if file_path_value and not os.path.exists(file_path_value):
-                errors.append(f"Il percorso file specificato per {field} non esiste: {file_path_value}")
-
-        # Controllo che i percorsi siano validi
-        for field in self.PATH_FIELDS:
-            path_value = os.path.dirname(getattr(self, field, None))
-            if path_value and not os.path.exists(path_value):
-                errors.append(f"Il percorso cartella specificato per {field} non esiste: {path_value}")
-
-        # Controllo che le liste contengano valori validi
-        for field in self.LIST_FIELDS:
-            list_value = getattr(self, field, None)
-            if list_value is not None and not isinstance(list_value, list):
-                errors.append(f"Il campo {field} deve essere una lista, ma è di tipo {type(list_value).__name__}.")
-            elif list_value:
-                for path in list_value:
-                    if not isinstance(path, str):
-                        errors.append(f"Il campo {field} deve contenere solo stringhe.")
-
-        # Controllo che indent_content sia un booleano
-        if not isinstance(self.indent_content, bool):
-            errors.append(f"Il campo {self.INDENT_CONTENT} deve essere un booleano, ma è {type(self.indent_content).__name__}.")
-
-        if errors:
-            raise ValueError("\n".join(errors))
-
-    
     def load(self):
         # success, msg = self.config_instance.load(self)
         # return success, msg

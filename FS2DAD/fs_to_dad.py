@@ -142,7 +142,7 @@ def fs_to_dad(
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
 
-    node_creation = XMLNode("Creation", {
+    node_creation = XMLNode("Create", {
         "Date": datetime.datetime.now().strftime("%d-%m-%Y"),
         "Hour": datetime.datetime.now().strftime("%H:%M:%S")
     })
@@ -162,8 +162,6 @@ def fs_to_dad(
         include_file_regex
     )
 
-    content_xml = f'<?xml version="1.0" encoding="utf-8"?>\n{node_dad.to_xml(indent_chars=indent_chars)}'
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write(content_xml)
+    node_dad.write_file(output_file, indent_chars)
     
     return True, f"XML generato: {output_file}"

@@ -1,8 +1,0 @@
-2025-03-30 19:10:53.309 | DEBUG    | app_config           | Configurazione inizializzata con i valori di default.
-2025-03-30 19:10:53.312 | DEBUG    | _modules.config.config_handler | File di configurazione caricato: C:\sources\Python-Workspace/FS2DAD/config2.json.
-2025-03-30 19:10:53.312 | DEBUG    | _modules.config.config_handler | Inizio calcolo percorso di output per: c:/sources/FlexCore-Workspace
-2025-03-30 19:10:53.312 | DEBUG    | _modules.config.config_handler | Nome della cartella target: FlexCore-Workspace
-2025-03-30 19:10:53.313 | DEBUG    | _modules.config.config_handler | Placeholders: {'target': 'FlexCore-Workspace', 'timestamp': '20250330_191053'}
-2025-03-30 19:10:53.313 | DEBUG    | _modules.config.config_handler | Percorso di output generato: .\_artifacts\FlexCore-Workspace.xml
-2025-03-30 19:10:53.313 | INFO     | __main__             | ✅ Configurazione valida
-2025-03-30 19:10:55.364 | INFO     | __main__             | 🎉 XML generato: .\_artifacts\FlexCore-Workspace.xml

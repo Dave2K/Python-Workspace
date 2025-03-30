@@ -6,12 +6,10 @@ class XMLNode:
     class NodeContent:
         """Classe per gestire il contenuto di un nodo XML."""
         
-        def __init__(self, text="", is_cdata=False, is_text=False, indent_content=False):
+        def __init__(self, text="", is_cdata=False, is_text=False):
             self.text = text
             self.is_cdata = is_cdata
-            self.is_text = is_text
-            self.indent_content = indent_content
-        
+            self.is_text = is_text        
         def __str__(self):
             return self.text
     
@@ -41,7 +39,7 @@ class XMLNode:
         self.content.is_text = True
         self.content.is_cdata = False
 
-    def to_xml(self, indent_level=0, indent_chars=""):
+    def to_xml(self, indent_chars="", indent_level=0):
         """Converte il nodo in stringa XML."""
         indent_str = indent_chars * indent_level
         attrs = " ".join([f'{k}="{v}"' for k, v in self.attributes.items()])
@@ -65,11 +63,19 @@ class XMLNode:
                 xml_content.append(f"{indent_str_content}{_text}")
 
         for child in self.children:
-            xml_content.append(child.to_xml(indent_level + 1, indent_chars))
+            xml_content.append(child.to_xml(indent_chars, indent_level + 1))
         xml_content.append(closing_tag)
 
         separator = "" if not indent_chars else "\n"
         return separator.join(xml_content)
+    
+    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8"):
+        separator = "" if not indent_chars else "\n"
+        header = '<?xml version="1.0" encoding="utf-8"?>'
+        content_xml = f'{header}{separator}{self.to_xml(indent_chars, indent_level)}'
+        with open(file_name, "w", encoding=encoding) as f:
+            f.write(content_xml)
+ 
 
     def sanitize_xml(self, text: str) -> str:
         """

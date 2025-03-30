@@ -18,8 +18,8 @@ from help import show_full_help
 
 # Configurazione logging
 configure_logging(
-    #filemode='w', # a per append
-    #log_folder="_logs", # se omesso non crea/scrive
+    ilemode='w', # a per append
+    log_folder="_logs", # se omesso non crea/scrive
     #log_level=logging.DEBUG,
     enable_console_logging=True,
     console_level=logging.INFO,
@@ -77,8 +77,7 @@ def main():
 
     # Caricamento config
     app_config = AppConfig(config_path)
-    success, msg = app_config.load()
-    
+    success, msg = app_config.load() 
     if not success:
         logger.error(f"Caricamento fallito: {msg}")
         return
@@ -86,13 +85,16 @@ def main():
     # Applica override CLI
     apply_cli_overrides(app_config, args)
 
+    # success, msg = app_config.validate()
+    # if success:
+    #     logger.info("✅ Configurazione valida")
+    # else:
+    #     logger.error(msg)
+    #     return
+    
     # sostituisce i placeholder 
     app_config.resolve_output_path()
     
-    # Validazione DOPO gli override
-    app_config.validate()
-    logger.info("✅ Configurazione valida")
-
     # Generazione XML
     success, message = fs_to_dad(
         target_path_folder=app_config.target_path_folder,
