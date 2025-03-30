@@ -5,11 +5,11 @@
             "name": "Esegui fs-dad.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/FS-DAD/fs2dad.py", 
+            "program": "${workspaceFolder}/FS2DAD/fs2dad.py", 
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
-                "--config", "${workspaceFolder}/FS-DAD/config2.json"
+                "--config", "${workspaceFolder}/FS2DAD/config2.json"
             ]
         },
         {

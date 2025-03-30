@@ -28,9 +28,11 @@ class AppConfig():
     # Campi obbligatori
     REQUIRED_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
     # Campi che devono essere percorsi validi
-    PATH_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
+    FILE_PATH_FIELDS = [TARGET_PATH_FOLDER]
     # Campi che devono essere liste
     LIST_FIELDS = [INCLUDE_FOLDERS, EXCLUDE_FOLDERS, EXCLUDE_FILES]
+    # Campi che devono avere le cartelle valide
+    PATH_FIELDS = [OUTPUT_PATH_FILE]
 
     DEFAULT_CONFIG = {
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
@@ -121,11 +123,16 @@ class AppConfig():
                 errors.append(f"Il campo {field} è obbligatorio e non può essere vuoto.")
 
         # Controllo che i percorsi siano validi
+        for field in self.FILE_PATH_FIELDS:
+            file_path_value = getattr(self, field, None)
+            if file_path_value and not os.path.exists(file_path_value):
+                errors.append(f"Il percorso file specificato per {field} non esiste: {file_path_value}")
+
+        # Controllo che i percorsi siano validi
         for field in self.PATH_FIELDS:
-            path_value = getattr(self, field, None)
-            # if path_value and not os.path.exists(self.config_instance.get_output_file_path(path_value, self.target_path_folder)):
+            path_value = os.path.dirname(getattr(self, field, None))
             if path_value and not os.path.exists(path_value):
-                errors.append(f"Il percorso specificato per {field} non esiste: {path_value}")
+                errors.append(f"Il percorso cartella specificato per {field} non esiste: {path_value}")
 
         # Controllo che le liste contengano valori validi
         for field in self.LIST_FIELDS:

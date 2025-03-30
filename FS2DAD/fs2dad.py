@@ -71,42 +71,42 @@ def main():
         show_full_help()
         return
 
-    try:
-        # Caricamento config
-        app_config = AppConfig(config_path)
-        success, msg = app_config.load()
-        
-        if not success:
-            logger.error(f"Caricamento fallito: {msg}")
-            return
+    # try:
+    # Caricamento config
+    app_config = AppConfig(config_path)
+    success, msg = app_config.load()
+    
+    if not success:
+        logger.error(f"Caricamento fallito: {msg}")
+        return
 
-        # Applica override CLI
-        apply_cli_overrides(app_config, args)
+    # Applica override CLI
+    apply_cli_overrides(app_config, args)
 
-        # sostituisce i placeholder 
-        app_config.resolve_output_path()
-        
-        # Validazione DOPO gli override
-        app_config.validate()
-        logger.info("✅ Configurazione valida")
+    # sostituisce i placeholder 
+    app_config.resolve_output_path()
+    
+    # Validazione DOPO gli override
+    app_config.validate()
+    logger.info("✅ Configurazione valida")
 
-        # Generazione XML
-        success, message = fs_to_dad(
-            target_path_folder=app_config.target_path_folder,
-            output_file=app_config.output_path_file,
-            ignore_folders=app_config.exclude_folders,
-            ignore_files=app_config.exclude_files,
-            indent="  " if app_config.indent_content else "",
-            include_folders=app_config.include_folders,
-            include_files=app_config.include_files
-        )
+    # Generazione XML
+    success, message = fs_to_dad(
+        target_path_folder=app_config.target_path_folder,
+        output_file=app_config.output_path_file,
+        ignore_folders=app_config.exclude_folders,
+        ignore_files=app_config.exclude_files,
+        indent="  " if app_config.indent_content else "",
+        include_folders=app_config.include_folders,
+        include_files=app_config.include_files
+    )
 
-        logger.info(f"🎉 {message}" if success else f"❌ {message}")
+    logger.info(f"🎉 {message}" if success else f"❌ {message}")
 
-    except ValueError as e:
-        logger.error(f"❌ Errore validazione:\n{str(e)}")
-    except Exception as e:
-        logger.error(f"🔥 Errore critico: {str(e)}", exc_info=True)
+    # except ValueError as e:
+    #     logger.error(f"❌ Errore validazione:\n{str(e)}")
+    # except Exception as e:
+    #     logger.error(f"🔥 Errore critico: {str(e)}", exc_info=True)
 
 if __name__ == "__main__":
     main()

@@ -67,34 +67,37 @@ def fs_to_dad(
     exclude_folder_regex = [re.compile(glob_to_regex(p)) for p in ignore_folders]
     include_file_regex = [re.compile(glob_to_regex(p)) for p in include_files]
 
-    def process_content(file_handler_instance: FileHandler, indent_level: int, indent: str, indent_content: bool):
-        fh = file_handler_instance
-        if not fh.has_info_been_read:
-            fh.get_info()
+    # def process_content(file_handler_instance: FileHandler, indent_level: int, indent: str, indent_content: bool):
+    #     fh = file_handler_instance
+    #     if not fh.has_info_been_read:
+    #         fh.get_info()
         
-        content_processed = None
-        msg_err = None
+    #     content_processed = None
+    #     msg_err = None
+    #     is_text = None  
         
-        content_file, msg_err = fh.read()
-        if content_file:
-            is_text, msg_err = fh.is_text()
-            if is_text:
-                if indent_content:
-                    indent_str = indent * (indent_level + 1)
-                    lines = content_file.splitlines()
-                    formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)
-                    indent_str_closed_tag = indent * indent_level
-                    content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str_closed_tag}]]>"
-                else:
-                    content_processed = f"<![CDATA[{content_file}]]>"
-            else:
-                msg = f"File binario: {fh.file_path} (MIME: {fh.mime}, Encoding: {fh.encoding})"
-                content_processed = msg
-                logger.warning(msg)
-        else:
-            msg = f"Errore lettura file: {fh.file_path} - {msg_err}"
-            logger.error(msg)
-        return content_processed, msg_err
+    #     content_file, msg_err = fh.read()
+    #     if content_file:
+    #         is_text, msg_err = fh.is_text()
+    #         if is_text:
+    #             if indent_content:
+    #                 indent_str = indent * (indent_level + 1)
+    #                 lines = content_file.splitlines()
+    #                 formatted_content = "\n".join(f"{indent_str}{line}" for line in lines)
+    #                 indent_str_closed_tag = indent * indent_level
+    #                 # content_processed = f"<![CDATA[\n{formatted_content}\n{indent_str_closed_tag}]]>"
+    #                 content_processed = f"\n{formatted_content}\n{indent_str_closed_tag}"
+    #             else:
+    #                 # content_processed = f"<![CDATA[{content_file}]]>"
+    #                 content_processed = f"{content_file}"
+    #         else:
+    #             msg = f"File binario: {fh.file_path} (MIME: {fh.mime}, Encoding: {fh.encoding})"
+    #             content_processed = msg
+    #             logger.warning(msg)
+    #     else:
+    #         msg = f"Errore lettura file: {fh.file_path} - {msg_err}"
+    #         logger.error(msg)
+    #     return content_processed, msg_err, is_text
 
     def add_element(
             parent: XMLNode, 
@@ -118,7 +121,7 @@ def fs_to_dad(
 
         folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
         parent.add_child(folder_node)
-        indent_level += 1
+        # indent_level += 1
 
         # for entry in os.scandir(current_dir):
         for entry in sorted(os.scandir(current_dir), key=lambda e: e.name.lower()):
@@ -149,22 +152,32 @@ def fs_to_dad(
                     continue
                 fh.get_info()
 
-                node_file = XMLNode("File", {"Name": fh.name, "Size": str(fh.size)})
-                indent_level += 1
-
-                node_content = XMLNode("Content", {
+                node_file = XMLNode("File", {
+                    "Name": fh.name, 
+                    # "Size": str(fh.size),
                     "MIME": fh.mime,
                     "Encoding": fh.encoding
                 })
                 if fh.bom:
-                    node_content.attributes["BOM"] = "True"
-                indent_level += 1
+                    node_file.attributes["BOM"] = "True"
+                # indent_level += 1
 
-                content, msg_err = process_content(fh, indent_level, indent, indent_content)
-
-                node_content.set_text(content)
-                node_file.add_child(node_content)
+                content_file, msg_err = fh.read()
+                if content_file:
+                    is_text, msg_err = fh.is_text()
+                    if not is_text:
+                        msg = f"File binario: {fh.file_path} (MIME: {fh.mime}, Encoding: {fh.encoding})"
+                        content_file = msg
+                        logger.warning(msg)
+                else:
+                    msg = f"Errore lettura file: {fh.file_path} - {msg_err}"
+                    content_file = msg
+                    logger.error(msg)
+                node_file.set_text(content_file)
                 folder_node.add_child(node_file)
+                # indent_level -= 1
+
+
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
     indent_initial_level = 0
