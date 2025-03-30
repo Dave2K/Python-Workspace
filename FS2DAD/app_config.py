@@ -15,7 +15,6 @@ class AppConfig():
     """
     Classe concreta per la gestione della configurazione dell'applicazione.
     """
-
     # Costanti per le chiavi di configurazione
     TARGET_PATH_FOLDER = "target_path_folder"
     OUTPUT_PATH_FILE = "output_path_file"
@@ -24,7 +23,10 @@ class AppConfig():
     EXCLUDE_FILES = "exclude_files"
     INDENT_CONTENT = "indent_content"
     INCLUDE_FILES = "include_files"
-    
+
+    # Campi obbligatori
+    REQUIRED_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
+
     DEFAULT_CONFIG = {
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
         OUTPUT_PATH_FILE: "{target}.xml",

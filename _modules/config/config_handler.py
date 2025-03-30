@@ -31,10 +31,12 @@ class Config:
     """
     
     SUPPORTED_PLACEHOLDERS = ["{target}", "{timestamp}"]
-    ATTR_TO_DICT = "to_dict"
-    ATTR_FROM_DICT = "from_dict"
-    ATTR_CONFIG_FILE_PATH = "config_file_path"
-
+    ATTR_REQUIRED = [
+        "to_dict",
+        "from_dict",
+        "config_file_path",
+        "REQUIRED_FIELDS"
+    ]
 
     # def __init__(self):
     #     self.config = {}
@@ -60,27 +62,48 @@ class Config:
         :param config_file_path: Percorso del file di configurazione.
         :return: Tupla (success: bool, msg: str)
         """
-        success, msg = self.check_hasattr(app_config_instance, self.ATTR_CONFIG_FILE_PATH)
-        if success:
-            success, msg = self.check_hasattr(app_config_instance, self.ATTR_FROM_DICT)
-    
-        if success:
-            if os.path.exists(app_config_instance.config_file_path):
-                try:
-                    with open(app_config_instance.config_file_path, "r") as f:
-                        config_data = json.load(f)
-                    
-                    # Usa l'istanza di AppConfig per caricare la configurazione
-                    app_config_instance.from_dict(config_data)
-                    success = True
-                    msg = f"File di configurazione caricato: {app_config_instance.config_file_path}."
-                    logger.debug(msg)
-                except (json.JSONDecodeError, IOError) as e:
-                    msg = f"Errore durante il caricamento del file di configurazione: {str(e)}"
-                    logger.error(msg)
-            else:
-                msg = f"File di configurazione non trovato: {app_config_instance.config_file_path}."
+        # controllo esistenza metodi sulla AppConfig
+        success = True
+        errors = []
+        for field in self.ATTR_REQUIRED:
+            _success, msg = self.check_hasattr(app_config_instance, field)
+            if not _success:
+                success = False
+                errors.append(msg)
+        if not success:
+            msg_error = f"Errore in controllo campi in AppConfig: {'\n'.join(errors)}"
+            logger.error(msg_error)
+            return success, msg_error
+        
+        if os.path.exists(app_config_instance.config_file_path):
+            try:
+                with open(app_config_instance.config_file_path, "r") as f:
+                    config_data = json.load(f)
+
+                # controllo esistenza campi obbligatori nel file config
+                success = True
+                errors = []
+                required = app_config_instance.REQUIRED_FIELDS
+                for field in required:  
+                    if field not in config_data:
+                        errors.append(f"{field} ")
+                        success = False  
+                if not success:
+                    msg_error = f"File config {app_config_instance.config_file_path}\nCampi obbligatori mancanti: {', '.join(errors)}."  
+                    logger.error(msg_error)
+                    return success, msg_error
+        
+                # Usa l'istanza di AppConfig per caricare la configurazione
+                app_config_instance.from_dict(config_data)
+                success = True
+                msg = f"File di configurazione caricato: {app_config_instance.config_file_path}."
+                logger.debug(msg)
+            except (json.JSONDecodeError, IOError) as e:
+                msg = f"Errore durante il caricamento del file di configurazione: {str(e)}"
                 logger.error(msg)
+        else:
+            msg = f"File di configurazione non trovato: {app_config_instance.config_file_path}."
+            logger.error(msg)
         
         return success, msg
 

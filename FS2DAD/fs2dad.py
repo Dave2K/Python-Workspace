@@ -85,13 +85,6 @@ def main():
     # Applica override CLI
     apply_cli_overrides(app_config, args)
 
-    # success, msg = app_config.validate()
-    # if success:
-    #     logger.info("✅ Configurazione valida")
-    # else:
-    #     logger.error(msg)
-    #     return
-    
     # sostituisce i placeholder 
     app_config.resolve_output_path()
     
