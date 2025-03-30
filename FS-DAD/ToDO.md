@@ -1,25 +1,5 @@
 # ToDO
 
-manca controllo campi config obbligatori
-
-rivedere main per valorizzare config con i parametro cli
-xml_generator(config, inndent)
-
-USARE VALIDATE DELLA CONFIG
-
-include_folders
-    "include_folders": [
-        "*"
-    ],
-    cambiare in
-    "include_folders": [
-        ["pattern fiolder", "patternfile1", "patternfile2" ]
-    ], 
-
-splitlines diventa compress dove si elimina l'identazione xml
-
-opzione excludefolderempty
-
 implementare dentro xmlnode
     root?
     cdata
@@ -30,13 +10,7 @@ implementare dentro xmlnode
     remove
 
 
-ricontrollare bene i parametri obbligatori
- e valorizzare quelli opzionali
-    include_folders
-    exclude_folders
-    exclude_files
-
-nel cdata se il contenuto ha "--" convertire in base64
+nel cdata se il contenuto deve passare da xmlnode.sanitized
 
 ## BUGS
 

@@ -108,19 +108,6 @@ class AppConfig():
             self.INCLUDE_FILES: self.include_files
         }
 
-    # def validate(self):
-    #     """
-    #     Validazione della configurazione dell'applicazione.
-
-    #     Verifica che i campi obbligatori siano presenti nella configurazione.
-
-    #     :return: Tupla (successo: bool, messaggio: str)
-    #     """
-    #     required = [self.TARGET_PATH_FOLDER, self.OUTPUT_PATH_FILE]
-    #     for field in required:
-    #         if not getattr(self, field, None):
-    #             return False, f"Campo mancante: {field}"
-    #     return True, "Configurazione valida"
     def validate(self):
         """
         Valida i parametri di configurazione.
@@ -136,6 +123,7 @@ class AppConfig():
         # Controllo che i percorsi siano validi
         for field in self.PATH_FIELDS:
             path_value = getattr(self, field, None)
+            # if path_value and not os.path.exists(self.config_instance.get_output_file_path(path_value, self.target_path_folder)):
             if path_value and not os.path.exists(path_value):
                 errors.append(f"Il percorso specificato per {field} non esiste: {path_value}")
 
@@ -149,9 +137,9 @@ class AppConfig():
                     if not isinstance(path, str):
                         errors.append(f"Il campo {field} deve contenere solo stringhe.")
 
-        # Controllo che split_content sia un booleano
-        if not isinstance(self.split_content, bool):
-            errors.append(f"Il campo {self.SPLIT_CONTENT} deve essere un booleano, ma è {type(self.split_content).__name__}.")
+        # Controllo che indent_content sia un booleano
+        if not isinstance(self.indent_content, bool):
+            errors.append(f"Il campo {self.INDENT_CONTENT} deve essere un booleano, ma è {type(self.indent_content).__name__}.")
 
         if errors:
             raise ValueError("\n".join(errors))
@@ -165,4 +153,8 @@ class AppConfig():
     def write(self, config_file_path=None):
         config_file_path = config_file_path or self.config_file_path
         self.config_instance.write(self)
+
+    def resolve_output_path(self):
+        self.output_path_file = self.config_instance.get_output_file_path(self.target_path_folder, self.output_path_file)
+
         

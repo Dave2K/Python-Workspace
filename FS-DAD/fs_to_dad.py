@@ -17,20 +17,6 @@ from xmlnode import XMLNode
 from _modules.file_utils import FileHandler
 import xml.etree.ElementTree as ET
 
-# def glob_to_regex(pattern: str) -> str:
-#     """Converte pattern glob in regex, supportando * e **."""
-#     pattern = pattern.replace("\\", "/")
-    
-#     # Caso speciale: pattern "*" deve matchare qualsiasi cartella/file
-#     if pattern == "*":
-#         return r"^.*$"  # Match completo
-    
-#     pattern = pattern.replace("**", "<GLOB_STAR>")
-#     regex = re.escape(pattern)
-#     regex = regex.replace("<GLOB_STAR>", ".*")
-#     regex = regex.replace(r"\*", "[^/\\\\]*")  # Match qualsiasi carattere tranne / o \
-#     regex = regex.replace(r"\/", r"[/\\]")      # Match esplicito per / o \
-#     return f"^{regex}$"
 def glob_to_regex(pattern: str) -> str:
     """Converte pattern glob in regex, supportando * e **.
     
@@ -54,7 +40,7 @@ def glob_to_regex(pattern: str) -> str:
     
     return f"(?i)^{regex}$"  # Aggiunto (?i) all'inizio per ignorecase
 
-def create_xml_with_indent(    
+def fs_to_dad(    
     target_path_folder: str,
     output_file: str,
     ignore_folders: list = [],
