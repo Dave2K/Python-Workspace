@@ -140,15 +140,13 @@ def fs_to_dad(
                 node_file.set_text(content_file)
                 folder_node.add_child(node_file)
 
-    node_root = XMLNode("Root")
+    node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
+
     node_creation = XMLNode("Creation", {
         "Date": datetime.datetime.now().strftime("%d-%m-%Y"),
         "Hour": datetime.datetime.now().strftime("%H:%M:%S")
     })
-    node_root.add_child(node_creation)
-
-    node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
-    node_root.add_child(node_dad)
+    node_dad.add_child(node_creation)
     
     node_filesystem = XMLNode("FileSystem")
     node_dad.add_child(node_filesystem)

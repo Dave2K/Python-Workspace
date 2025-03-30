@@ -18,12 +18,13 @@ from help import show_full_help
 
 # Configurazione logging
 configure_logging(
-    log_folder="_logs",
-    log_level=logging.DEBUG,
+    #filemode='w', # a per append
+    #log_folder="_logs", # se omesso non crea/scrive
+    #log_level=logging.DEBUG,
     enable_console_logging=True,
-    console_level=logging.DEBUG,
-    file_prefix="",
-    max_log_files=5
+    console_level=logging.INFO,
+    #file_prefix="",
+    #max_log_files=5
 )
 logger = create_logger(__name__)
 
