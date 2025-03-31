@@ -18,13 +18,19 @@ from help import show_full_help
 
 # Configurazione logging
 configure_logging(
-    ilemode='w', # a per append
-    log_folder="_logs", # se omesso non crea/scrive
-    #log_level=logging.DEBUG,
-    enable_console_logging=True,
-    console_level=logging.INFO,
-    #file_prefix="",
-    #max_log_files=5
+    enable_file_logging=False,       # Abilita log su file (default: False; alternativamente True)
+    # file_mode='a',                 # Modalità di apertura file: 'a' per append, 'w' per scrivere (default: 'w')
+    # log_folder="_logs",            # Cartella in cui salvare i log (default: "logs")
+    log_level=logging.DEBUG,         # Livello globale di log (default: logging.DEBUG)
+    enable_console_logging=True,     # Abilita log su console (default: True)
+    console_level=logging.DEBUG,     # Livello di log per la console (default: logging.DEBUG)
+    # console_format={               # Dizionario dei formati per la console per ciascun livello
+    #     'default': "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
+    #     'info': "%(asctime)s - %(name)s - %(message)s",
+    #     'debug': "%(asctime)s - %(levelname)-8s - %(message)s",
+    # },
+    console_style="both"            # Stile per la console: "text", "icon", "both" (default: "text" o "both")
+    # Altre opzioni per il file logging sono disponibili, vedi la documentazione
 )
 logger = create_logger(__name__)
 
@@ -101,7 +107,7 @@ def main():
         include_files=app_config.include_files
     )
 
-    logger.info(f"🎉 {message}" if success else f"❌ {message}")
+    print(f"✅ {message}" if success else f"❌ {message}")
 
 if __name__ == "__main__":
     main()

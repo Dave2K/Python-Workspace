@@ -92,8 +92,15 @@ def fs_to_dad(
         folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
         parent.add_child(folder_node)
 
-        # for entry in os.scandir(current_dir):
-        for entry in sorted(os.scandir(current_dir), key=lambda e: e.name.lower()):
+        # scansione, prima file poi cartelle
+        entries = sorted(
+            os.scandir(current_dir),
+            key=lambda e: (
+                0 if e.is_file() else 1,  # Prima i file (0), poi le cartelle (1)
+                e.name.lower()            # Ordine alfabetico per nome
+            )
+        )
+        for entry in entries:
             entry_path = os.path.join(current_dir, entry.name)
             
             if entry.is_dir():

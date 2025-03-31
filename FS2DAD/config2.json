@@ -2,9 +2,11 @@
     "target_path_folder": "c:/sources/FlexCore-Workspace",
     "target_path_folder1": "c:/sources/python-workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
-    "indent_content": false,
-    "sanitize": true,
+    "indent_content": true,
+    "sanitize": false,
     "include_folders": ["**"],
+    "include_files": [
+    ],
     "exclude_folders": [
         "**/bin", 
         "**/obj", 
@@ -41,6 +43,5 @@
         "help.py",
         "ToDO.md",
         "Pattern supportati.md"
-    ],
-    "include_files": []
+    ]
 }
