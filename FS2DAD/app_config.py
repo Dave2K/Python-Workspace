@@ -118,6 +118,17 @@ class AppConfig():
         self.config_instance.write(self)
 
     def resolve_output_path(self):
-        self.output_path_file = self.config_instance.get_output_file_path(self.target_path_folder, self.output_path_file)
+        template = self.add_sanitize_template(self.output_path_file, self.sanitize)
+        self.output_path_file = self.config_instance.get_output_file_path(template, self.target_path_folder)
+
+    def add_sanitize_template(self, file_path: str, sanitize: bool) -> str:
+        if not sanitize:
+            return file_path
+
+        directory, filename = os.path.split(file_path)
+        name, ext = os.path.splitext(filename)
+        
+        sanitized_filename = f"{name}{{sanitize}}{ext}"
+        return os.path.join(directory, sanitized_filename)
 
         

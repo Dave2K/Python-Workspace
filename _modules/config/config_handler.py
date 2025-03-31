@@ -27,10 +27,10 @@ class Config:
     Metodi:
         load(): Carica la configurazione da un file JSON.
         get(key): Ottiene il valore di una chiave di configurazione.
-        get_output_file_path(target_path_folder, output_template): Calcola il percorso del file di output sostituendo i placeholder.
+        get_output_file_path(template, target_path_folder): Calcola il percorso del file di output sostituendo i placeholder.
     """
     
-    SUPPORTED_PLACEHOLDERS = ["{target}", "{timestamp}"]
+    SUPPORTED_PLACEHOLDERS = [ "{target}", "{timestamp}", "{sanitize}" ]
     ATTR_REQUIRED = [
         "to_dict",
         "from_dict",
@@ -133,12 +133,12 @@ class Config:
 
         return success, msg
 
-    def get_output_file_path(self, target_path_folder, output_template):
+    def get_output_file_path(self, template, target_path_folder):
         """
         Calcola il percorso del file di output sostituendo i placeholder nel template.
         
         :param target_path_folder: Percorso della cartella target.
-        :param output_template: Template del percorso del file di output con placeholders.
+        :param template: Template del percorso del file di output con placeholders.
         :return: Il percorso di output generato con i valori sostituiti.
         :raises: ValueError se il template contiene un placeholder non supportato.
         """
@@ -151,23 +151,24 @@ class Config:
         target_name = os.path.basename(os.path.normpath(target_path_folder))
         logger.debug(f"Nome della cartella target: {target_name}")
 
-        if not output_template:
+        if not template:
             logger.error("Il template di output è vuoto")
             raise ValueError("Il template di output è vuoto")
 
-        for placeholder in self._extract_placeholders(output_template):
+        for placeholder in self._extract_placeholders(template):
             if placeholder not in self.SUPPORTED_PLACEHOLDERS:
                 logger.error(f"Il template contiene un placeholder non supportato: {placeholder}")
                 raise ValueError(f"Il template contiene un placeholder non supportato: {placeholder}")
 
         placeholders = {
             "target": target_name,
-            "timestamp": datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            "timestamp": datetime.datetime.now().strftime("_%Y%m%d_%H%M%S"),
+            "sanitize": "_sanitized"
         }
         logger.debug(f"Placeholders: {placeholders}")
 
         try:
-            output_file = output_template.format(**placeholders)
+            output_file = template.format(**placeholders)
             logger.debug(f"Percorso di output generato: {output_file}")
         except KeyError as e:
             logger.error(f"Errore durante la sostituzione dei placeholder: {str(e)}")

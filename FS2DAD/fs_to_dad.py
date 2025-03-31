@@ -166,6 +166,6 @@ def fs_to_dad(
         exclude_file_regex
     )
 
-    node_dad.write_file(output_file, indent_chars, sanitize)
+    node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize)
     
     return True, f"XML generato: {output_file}"

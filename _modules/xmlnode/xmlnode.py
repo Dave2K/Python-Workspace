@@ -55,27 +55,27 @@ class XMLNode:
 
         xml_content = [opening_tag]
         if self.content.text:
-            text_sanitized = self.content.text if not sanitize else self.sanitize_xml(self.content.text)
+            content = self.content.text if not sanitize else self.sanitize_xml(self.content.text)
             indent_str_content = indent_chars * (indent_level + 1)
             if indent_chars:
-                lines = text_sanitized.splitlines()
+                lines = content.splitlines()
                 _text = "\n".join(f"{indent_str_content}{line}" for line in lines)
                 xml_content.append(f"{_text}")
             else:
-                _text = text_sanitized
+                _text = content
                 xml_content.append(f"{indent_str_content}{_text}")
 
         for child in self.children:
-            xml_content.append(child.to_xml(indent_chars, indent_level + 1))
+            xml_content.append(child.to_xml(indent_chars=indent_chars, indent_level=indent_level + 1, sanitize=sanitize))
         xml_content.append(closing_tag)
 
         separator = "" if not indent_chars else "\n"
         return separator.join(xml_content)
     
-    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8"):
+    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8", sanitize=False):
         separator = "" if not indent_chars else "\n"
         header = '<?xml version="1.0" encoding="utf-8"?>'
-        content_xml = f'{header}{separator}{self.to_xml(indent_chars, indent_level)}'
+        content_xml = f'{header}{separator}{self.to_xml(indent_chars=indent_chars, indent_level=indent_level, sanitize=sanitize)}'
         with open(file_name, "w", encoding=encoding) as f:
             f.write(content_xml)
  
