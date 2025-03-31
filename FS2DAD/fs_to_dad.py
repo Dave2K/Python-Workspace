@@ -13,7 +13,7 @@ import re
 import os
 import fnmatch
 import datetime
-from xmlnode import XMLNode
+from _modules.xmlnode import XMLNode
 from _modules.file_utils import FileHandler
 import xml.etree.ElementTree as ET
 
@@ -48,7 +48,7 @@ def fs_to_dad(
     indent_chars: str = "",
     include_folders: list = ["*"],
     indent_content: bool = True,
-    include_files: list = []
+    include_files: list = []  
 ) -> tuple:
     """
     Genera un XML rappresentante la struttura del filesystem.
@@ -65,7 +65,10 @@ def fs_to_dad(
     """
     include_folder_regex = [re.compile(glob_to_regex(p)) for p in include_folders]
     exclude_folder_regex = [re.compile(glob_to_regex(p)) for p in ignore_folders]
+    
+    # include_file_regex = [re.compile(glob_to_regex(p)) for p in include_files]
     include_file_regex = [re.compile(glob_to_regex(p)) for p in include_files]
+    exclude_file_regex = [re.compile(glob_to_regex(p)) for p in ignore_files]
 
     def add_element(
             parent: XMLNode, 
@@ -75,14 +78,13 @@ def fs_to_dad(
             include_folder_regex: list, 
             root_path: str,
             indent_content: bool,
-            include_file_regex: list
+            include_file_regex: list,
+            exclude_file_regex:list
         ):
         abs_path = os.path.abspath(current_dir).replace("\\", "/")  # Percorso assoluto normalizzato
         
-        # CASE SENSITIVE
         is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)
-        is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)
-        
+        is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)        
         if not is_folder_included or is_folder_excluded:
             return
 
@@ -102,13 +104,13 @@ def fs_to_dad(
                     include_folder_regex, 
                     root_path, 
                     indent_content,
-                    include_file_regex
+                    include_file_regex,
+                    exclude_file_regex
                 )
             else:
                 file_name = entry.name
                 is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)
-                is_file_excluded = any(fnmatch.fnmatch(file_name, p) for p in ignore_files)
-                
+                is_file_excluded = any(rgx.search(file_name) for rgx in exclude_file_regex)   
                 if not is_file_included or is_file_excluded:
                     continue
 
@@ -159,7 +161,8 @@ def fs_to_dad(
         include_folder_regex, 
         target_path_folder, 
         indent_content,
-        include_file_regex
+        include_file_regex,
+        exclude_file_regex
     )
 
     node_dad.write_file(output_file, indent_chars)

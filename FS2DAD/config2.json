@@ -1,6 +1,6 @@
 {
-    "target_path_folder0": "c:/sources/FlexCore-Workspace",
-    "target_path_folder": "c:/sources/python-workspace",
+    "target_path_folder": "c:/sources/FlexCore-Workspace",
+    "target_path_folder0": "c:/sources/python-workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": false,
     "include_folders": ["**"],
@@ -19,12 +19,13 @@
         "**/_artifacts", 
         "**/_temp",
         "**/Temps",
-        "**/Documents" ,
-        "**/projects" ,
-        "**/tests",
-        "**/solutions"  
+        "**/Documents",
+        "**/Tests"
     ],
     "fake": [
+        "**/projects" ,
+        "**/tests",
+        "**/solutions",  
         "**/Tests",
         "**/Solutions"
     ],
@@ -38,8 +39,7 @@
         "text_editor.py",
         "help.py",
         "ToDO.md",
-
-        "Directory.Build.props"
+        "Pattern supportati.md"
     ],
     "include_files": []
 }

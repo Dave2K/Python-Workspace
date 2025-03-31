@@ -52,7 +52,7 @@ class XMLNode:
 
         xml_content = [opening_tag]
         if self.content.text:
-            text_sanitized = self.sanitize_xml(self.content.text)
+            text_sanitized = self.content.text # self.sanitize_xml(self.content.text)
             indent_str_content = indent_chars * (indent_level + 1)
             if indent_chars:
                 lines = text_sanitized.splitlines()
