@@ -53,17 +53,11 @@ class Config:
             msg_err = f"L'oggetto {object} non esiste!"
         
         return success, msg_err
-                
-    def load(self, app_config_instance):
-        """
-        Carica la configurazione da un file JSON.
-        Se il file non esiste, crea una configurazione di default.
 
-        :param config_file_path: Percorso del file di configurazione.
-        :return: Tupla (success: bool, msg: str)
-        """
+    def check_attrs(self, app_config_instance):
         # controllo esistenza metodi sulla AppConfig
         success = True
+        msg_error = None
         errors = []
         for field in self.ATTR_REQUIRED:
             _success, msg = self.check_hasattr(app_config_instance, field)
@@ -73,8 +67,23 @@ class Config:
         if not success:
             msg_error = f"Errore in controllo campi in AppConfig: {'\n'.join(errors)}"
             logger.error(msg_error)
-            return success, msg_error
         
+        return success, msg_error
+        
+
+    def load(self, app_config_instance):
+        """
+        Carica la configurazione da un file JSON.
+        Se il file non esiste, crea una configurazione di default.
+
+        :param config_file_path: Percorso del file di configurazione.
+        :return: Tupla (success: bool, msg: str)
+        """
+        # controllo esistenza metodi sulla AppConfig
+        success, errors = self.check_attrs(app_config_instance)
+        if not success:
+            return success, errors
+
         if os.path.exists(app_config_instance.config_file_path):
             try:
                 with open(app_config_instance.config_file_path, "r") as f:
@@ -116,20 +125,19 @@ class Config:
         """
 
         # Controllo se esistono proprietà e metodi necessari su AppConfig
-        success, msg = self.check_hasattr(app_config_instance, self.ATTR_CONFIG_FILE_PATH)
-        if success:
-            success, msg = self.check_hasattr(app_config_instance, self.ATTR_TO_DICT)
-
-        if success:
-            try:
-                with open(app_config_instance.config_file_path, "w") as f:
-                    json.dump(app_config_instance.to_dict(), f, indent=4)
-                logger.debug(f"Configurazione scritta su {app_config_instance}")
-                success = True
-                msg = "Configurazione scritta con successo."
-            except IOError as e:
-                msg = f"Errore durante la scrittura del file di configurazione: {str(e)}"
-                logger.error(msg)
+        success, errors = self.check_attrs(app_config_instance)
+        if not success:
+            return success, errors
+        
+        try:
+            with open(app_config_instance.config_file_path, "w") as f:
+                json.dump(app_config_instance.to_dict(), f, indent=4)
+            logger.debug(f"Configurazione scritta su {app_config_instance}")
+            success = True
+            msg = "Configurazione scritta con successo."
+        except IOError as e:
+            msg = f"Errore durante la scrittura del file di configurazione: {str(e)}"
+            logger.error(msg)
 
         return success, msg
 

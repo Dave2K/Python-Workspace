@@ -21,9 +21,9 @@ configure_logging(
     enable_file_logging=False,       # Abilita log su file (default: False; alternativamente True)
     # file_mode='a',                 # Modalità di apertura file: 'a' per append, 'w' per scrivere (default: 'w')
     # log_folder="_logs",            # Cartella in cui salvare i log (default: "logs")
-    log_level=logging.DEBUG,         # Livello globale di log (default: logging.DEBUG)
+    log_level=logging.INFO,         # Livello globale di log (default: logging.DEBUG)
     enable_console_logging=True,     # Abilita log su console (default: True)
-    console_level=logging.DEBUG,     # Livello di log per la console (default: logging.DEBUG)
+    # console_level=logging.DEBUG,     # Livello di log per la console (default: logging.DEBUG)
     # console_format={               # Dizionario dei formati per la console per ciascun livello
     #     'default': "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
     #     'info': "%(asctime)s - %(name)s - %(message)s",
@@ -73,7 +73,7 @@ def main():
         return
 
     # Gestione config iniziale
-    default_config = "config.json"
+    default_config = AppConfig.DEFAULT_FILE_NAME_CONFIG
     config_path = args.config or default_config
 
     if not any(vars(args).values()) and not os.path.exists(default_config):

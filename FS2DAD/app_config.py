@@ -4,6 +4,7 @@ Configurazione concreta per l'applicazione.
 Estende la classe base Config e implementa il metodo di validazione.
 """
 import os
+import sys
 from _modules.logging.logging import create_logger
 # Crea il logger per la classe AppConfig
 logger = create_logger(__name__)
@@ -47,7 +48,7 @@ class AppConfig():
         INCLUDE_FILES: []
     }
 
-    DEFAULT_FILE_NAME_CONFIG = "config.json"
+    DEFAULT_FILE_NAME_CONFIG = f"{Path(sys.argv[0]).stem}.json"
 
     def __init__(self, config_file_path=None):
         """

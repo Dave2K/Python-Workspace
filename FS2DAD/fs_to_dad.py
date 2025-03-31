@@ -64,6 +64,10 @@ def fs_to_dad(
     :param include_files: Lista di pattern per includere file
     :return: Tupla (successo: bool, messaggio: str)
     """
+
+    if not os.path.exists(target_path_folder):
+        return False, f"Cartella {target_path_folder} non trovata"
+
     include_folder_regex = [re.compile(glob_to_regex(p)) for p in include_folders]
     exclude_folder_regex = [re.compile(glob_to_regex(p)) for p in ignore_folders]
     

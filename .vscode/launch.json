@@ -9,7 +9,18 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
-                "--config", "${workspaceFolder}/FS2DAD/config2.json"
+                "--config", "${workspaceFolder}/FS2DAD/fas2dad_custom.json"
+            ]
+        },
+        {
+            "name": "Esegui generate_csproj_xml",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/FS2DAD/generate_csproj_xml", 
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args0": [
+                "--config", "${workspaceFolder}/FS2DAD/fas2dad_custom.json"
             ]
         },
         {
