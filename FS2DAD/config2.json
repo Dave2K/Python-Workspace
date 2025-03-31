@@ -1,8 +1,9 @@
 {
-    "target_path_folder": "c:/sources/FlexCore-Workspace",
-    "target_path_folder0": "c:/sources/python-workspace",
+    "target_path_folder0": "c:/sources/FlexCore-Workspace",
+    "target_path_folder": "c:/sources/python-workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": false,
+    "sanitize": false,
     "include_folders": ["**"],
     "exclude_folders": [
         "**/bin", 

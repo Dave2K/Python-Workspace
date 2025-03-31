@@ -23,6 +23,7 @@ class AppConfig():
     EXCLUDE_FILES = "exclude_files"
     INDENT_CONTENT = "indent_content"
     INCLUDE_FILES = "include_files"
+    SANITIZE = "sanitize"
 
     # Campi obbligatori
     REQUIRED_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
@@ -31,6 +32,7 @@ class AppConfig():
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
         OUTPUT_PATH_FILE: "{target}.xml",
         INDENT_CONTENT: False,
+        SANITIZE: False,
         INCLUDE_FOLDERS: ["*"],
         EXCLUDE_FOLDERS: [
             "bin", "obj", "debug", "release",
@@ -65,6 +67,7 @@ class AppConfig():
         self.exclude_files = self.DEFAULT_CONFIG[self.EXCLUDE_FILES]
         self.indent_content = self.DEFAULT_CONFIG[self.INDENT_CONTENT]
         self.include_files = self.DEFAULT_CONFIG[self.INCLUDE_FILES]
+        self.sanitize = self.DEFAULT_CONFIG[self.SANITIZE]
 
         # Log per segnalare l'inizializzazione
         logger.debug("Configurazione inizializzata con i valori di default.")
@@ -85,6 +88,7 @@ class AppConfig():
         self.exclude_files = config_data.get(self.EXCLUDE_FILES, self.DEFAULT_CONFIG[self.EXCLUDE_FILES])
         self.indent_content = config_data.get(self.INDENT_CONTENT, self.DEFAULT_CONFIG[self.INDENT_CONTENT])
         self.include_files = config_data.get(self.INCLUDE_FILES, self.DEFAULT_CONFIG[self.INCLUDE_FILES])
+        self.sanitize = config_data.get(self.SANITIZE, self.DEFAULT_CONFIG[self.SANITIZE])
 
     def to_dict(self):
         """
@@ -100,7 +104,8 @@ class AppConfig():
             self.EXCLUDE_FOLDERS: self.exclude_folders,
             self.EXCLUDE_FILES: self.exclude_files,
             self.INDENT_CONTENT: self.indent_content,
-            self.INCLUDE_FILES: self.include_files
+            self.INCLUDE_FILES: self.include_files,
+            self.SANITIZE: self.sanitize
         }
 
     def load(self):

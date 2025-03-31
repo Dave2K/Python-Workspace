@@ -1,3 +1,6 @@
+from _modules.logging.logging import create_logger
+logger = create_logger(__name__)
+
 import xml.sax.saxutils as saxutils
 
 class XMLNode:
@@ -39,7 +42,7 @@ class XMLNode:
         self.content.is_text = True
         self.content.is_cdata = False
 
-    def to_xml(self, indent_chars="", indent_level=0):
+    def to_xml(self, indent_chars="", indent_level=0, sanitize=False):
         """Converte il nodo in stringa XML."""
         indent_str = indent_chars * indent_level
         attrs = " ".join([f'{k}="{v}"' for k, v in self.attributes.items()])
@@ -52,7 +55,7 @@ class XMLNode:
 
         xml_content = [opening_tag]
         if self.content.text:
-            text_sanitized = self.content.text # self.sanitize_xml(self.content.text)
+            text_sanitized = self.content.text if not sanitize else self.sanitize_xml(self.content.text)
             indent_str_content = indent_chars * (indent_level + 1)
             if indent_chars:
                 lines = text_sanitized.splitlines()

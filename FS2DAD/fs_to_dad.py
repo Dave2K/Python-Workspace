@@ -43,9 +43,10 @@ def glob_to_regex(pattern: str) -> str:
 def fs_to_dad(    
     target_path_folder: str,
     output_file: str,
+    indent_chars: str = "",
+    sanitize: bool = False,
     ignore_folders: list = [],
     ignore_files: list = [],
-    indent_chars: str = "",
     include_folders: list = ["*"],
     indent_content: bool = True,
     include_files: list = []  
@@ -165,6 +166,6 @@ def fs_to_dad(
         exclude_file_regex
     )
 
-    node_dad.write_file(output_file, indent_chars)
+    node_dad.write_file(output_file, indent_chars, sanitize)
     
     return True, f"XML generato: {output_file}"

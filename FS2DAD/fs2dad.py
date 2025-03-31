@@ -57,6 +57,7 @@ def main():
     parser.add_argument("--include", help="Pattern inclusione cartelle")
     parser.add_argument("--indent-content", action='store_true')
     parser.add_argument("--include-files", help="Pattern inclusione file")
+    parser.add_argument("--sanitize", help="valida xml")
     parser.add_argument("--help", action='store_true')
 
     args = parser.parse_args()
@@ -92,9 +93,10 @@ def main():
     success, message = fs_to_dad(
         target_path_folder=app_config.target_path_folder,
         output_file=app_config.output_path_file,
+        indent_chars="  " if app_config.indent_content else "",
+        sanitize=app_config.sanitize,
         ignore_folders=app_config.exclude_folders,
         ignore_files=app_config.exclude_files,
-        indent_chars="  " if app_config.indent_content else "",
         include_folders=app_config.include_folders,
         include_files=app_config.include_files
     )
