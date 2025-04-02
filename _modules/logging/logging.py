@@ -82,9 +82,6 @@ from typing import Any, Dict, Optional
 # Definizione del livello TRACE
 TRACE_LEVEL = 5
 logging.addLevelName(TRACE_LEVEL, "TRACE")
-# SUCCESS_LEVEL = 4
-# logging.addLevelName(SUCCESS_LEVEL, "SUCCESS")
-
 def trace(self, message, *args, **kwargs):
     """
     Metodo per il logging TRACE.
@@ -93,8 +90,15 @@ def trace(self, message, *args, **kwargs):
     """
     if self.isEnabledFor(TRACE_LEVEL):
         self._log(TRACE_LEVEL, message, args, **kwargs)
-
 logging.Logger.trace = trace
+
+# definizione del livello SUCCESS
+SUCCESS_LEVEL = 25
+logging.addLevelName(SUCCESS_LEVEL, "SUCCESS")
+def success(self, message, *args, **kwargs):
+    if self.isEnabledFor(SUCCESS_LEVEL):
+        self._log(SUCCESS_LEVEL, message, args, **kwargs)
+logging.Logger.success = success
 
 class ColoredFormatter(logging.Formatter):
     """
@@ -118,12 +122,12 @@ class ColoredFormatter(logging.Formatter):
     """
     COLORS = {
         TRACE_LEVEL: '\033[90m',        # Grigio
+        SUCCESS_LEVEL: '\033[32m',      # Verde
         logging.DEBUG: '\033[97m',      # Bianco
         logging.INFO: '\033[36m',       # Ciano
         logging.WARNING: '\033[33m',    # Giallo
         logging.ERROR: '\033[31m',      # Rosso
-        logging.CRITICAL: '\033[31;1m', # Rosso intenso
-        # SUCCESS_LEVEL: '\033[32m',      # Verde
+        logging.CRITICAL: '\033[31;1m'  # Rosso intenso
     }
     RESET = '\033[0m'
 

@@ -107,7 +107,8 @@ def main():
         include_files=app_config.include_files
     )
 
-    print(f"✅ {message}" if success else f"❌ {message}")
+    # print(f"✅ {message}" if success else f"❌ {message}")
+    logger.success(f"✅ {message}" if success else f"❌ {message}")
 
 if __name__ == "__main__":
     main()
