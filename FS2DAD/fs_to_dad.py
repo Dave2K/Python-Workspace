@@ -17,6 +17,12 @@ from _modules.xmlnode import XMLNode
 from _modules.file_utils import FileHandler
 import xml.etree.ElementTree as ET
 
+def cb(value): # color boolean
+    if value:
+        return f"\033[32m{value}\033[0m"   
+    return f"\033[31m{value}\033[0m"
+
+
 def glob_to_regex(pattern: str) -> str:
     """Converte pattern glob in regex, supportando * e **.
     
@@ -119,7 +125,7 @@ def fs_to_dad(
 
         folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
         # parent.add_child(folder_node)
-        is_file_included = False
+        founded_file_included = False
 
         # scansione, prima file poi cartelle
         entries = sorted(
@@ -147,6 +153,9 @@ def fs_to_dad(
                 if node:
                     folder_node.add_child(node)
                     is_file_included = True
+                    logger.debug(f"aggiungo nodo a {rel_path}")
+                else:
+                    logger.debug(f"NON aggiungo nodo a {rel_path}")
 
             else:
                 file_name = entry.name
@@ -159,19 +168,24 @@ def fs_to_dad(
                 is_file_excluded = any(rgx.search(file_name) for rgx in exclude_file_regex)   
 
                 logger.debug(" ")
+                # msg = f"FILE incluso:{cb(is_file_included)}, escluso:{cb(is_file_excluded)}, file:{file_name}, "
                 msg = f"FILE incluso:{is_file_included}, escluso:{is_file_excluded}, file:{file_name}, "
                 logger.debug(msg)
 
                 if is_file_excluded:
                     continue
 
+                # msg = f"incluso {cb(is_folder_included)}, PATH :{rel_path}"
                 msg = f"incluso {is_folder_included}, PATH :{rel_path}"
                 logger.debug(msg)
-                if not is_folder_included:
-                    if not is_folder_included or not is_file_included:
-                        continue 
+                # if not is_file_included:
+                #     if not is_folder_included:
+                #         if not is_folder_included or not is_file_included:
+                #             continue 
+                if not is_folder_included and not is_file_included:
+                    continue 
 
-                msg = f"includo file:{file_name}, "
+                msg = f"includo {file_name}, "
                 logger.debug(msg)
 
 
@@ -203,9 +217,9 @@ def fs_to_dad(
 
                 node_file.set_text(content_file)
                 folder_node.add_child(node_file)
-                is_file_included = True
+                founded_file_included = True
 
-        return folder_node if is_file_included else None
+        return folder_node if founded_file_included else None
 
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
