@@ -3,27 +3,52 @@
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": true,
     "sanitize": false,
-    "include_folders": [
-        "**FlexCore.Core*",      
-        "**FlexCore.Infrastructure*",
-        "**FlexCore.Caching*"
+    "include_folders": [ 
+        "**FlexCore.Caching.**",
+        "**FlexCore.Core.**"
     ],
     "include_files": [
         "Directory.Build.props",
         "Directory.Build.targets",
-        "appsettings.json",
+        "appsettings.json"
+    ],
+    "fake":[
         "**FlexCore.Core*/**/*", 
         "**FlexCore.Infrastructure*/**/*",
         "**FlexCore.Caching*/**/*"
     ],
     "exclude_folders": [
-        "**/bin/**", 
-        "**/obj/**", 
-        "**/.git/**",
-        "**/_artifacts/**"
+        "bin", 
+        "obj", 
+        "debug", 
+        "release", 
+        ".vscode", 
+        ".vs", 
+        ".git",
+        ".github",
+
+        "_artifacts", 
+
+        "__pycache__",
+        "_logs",
+        
+        "_temp",
+        "Temps",
+        "Documents",
+        "Applications"
     ],
     "exclude_files": [
-        "**/*.py",
-        "**/*.md"
+        ".gitignore", 
+        ".gitattributes", 
+        ".gitkeep", 
+        ".github",
+
+        "fs-sln-generator.py", 
+        "reference-checker-fix.py", 
+        "split_file.py", 
+        "text_editor.py",
+        "help.py",
+        "ToDO.md",
+        "Pattern supportati.md"
     ]
 }

@@ -1,3 +1,5 @@
 __pycache__/
-_artifacts/
-_logs/
+_artifacts/*
+!_artifacts/.gitkeep
+_logs/*
+!_logs/.gitkeep

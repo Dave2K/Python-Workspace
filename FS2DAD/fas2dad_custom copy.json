@@ -57,7 +57,9 @@
     ],
     "exclude_files": [
         ".gitignore", 
-        ".gitattributes", 
+        ".gitattributes",
+        ".gitkeep",
+        ".github",  
 
         "fs-sln-generator.py", 
         "reference-checker-fix.py", 

@@ -84,13 +84,37 @@ def fs_to_dad(
             root_path: str,
             indent_content: bool,
             include_file_regex: list,
-            exclude_file_regex:list
+            exclude_file_regex:list,
+            is_folder_included:False 
         ):
-        abs_path = os.path.abspath(current_dir).replace("\\", "/")  # Percorso assoluto normalizzato
-        
-        is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)
-        is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)        
-        if not is_folder_included or is_folder_excluded:
+        # # Percorso assoluto normalizzato
+        # abs_path = os.path.abspath(current_dir).replace("\\", "/")  
+                    
+        # # Verifica se la cartella deve essere inclusa (match con almeno un pattern di inclusione)
+        # is_folder_included = any(re.search(rgx, abs_path) for rgx in include_folder_regex)
+        # # Verifica se la cartella deve essere esclusa (match con almeno un pattern di esclusione)
+        # is_folder_excluded = any(re.search(rgx, abs_path) for rgx in exclude_folder_regex)
+
+        # msg = f"incluso:{is_folder_included}, escluso:{is_folder_excluded}, path:{abs_path}, "
+        # logger.debug(msg)
+        # Percorso assoluto 
+        abs_path = os.path.abspath(current_dir)  
+        # Percorso relativo normalizzato
+        rel_path = os.path.relpath(abs_path, root_path).replace("\\", "/")       
+        # Verifica se la cartella deve essere inclusa (match con almeno un pattern di inclusione)
+        if not is_folder_included:
+            is_folder_included = any(re.search(rgx, rel_path) for rgx in include_folder_regex)
+        # Verifica se la cartella deve essere esclusa (match con almeno un pattern di esclusione)
+        is_folder_excluded = any(re.search(rgx, rel_path) for rgx in exclude_folder_regex)
+
+        msg = f"incluso:{is_folder_included}, escluso:{is_folder_excluded}, path:{rel_path}, "
+        logger.debug(msg)
+
+        # # se non sono inclusi o sono esclusi allora esce
+        # if not is_folder_included or is_folder_excluded:
+        #     return
+        # se non sono inclusi o sono esclusi allora esce
+        if is_folder_excluded:
             return
 
         folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
@@ -117,14 +141,35 @@ def fs_to_dad(
                     root_path, 
                     indent_content,
                     include_file_regex,
-                    exclude_file_regex
+                    exclude_file_regex,
+                    is_folder_included
                 )
             else:
                 file_name = entry.name
-                is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)
+                # is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)
+                # is_file_excluded = any(rgx.search(file_name) for rgx in exclude_file_regex)   
+                # if not is_file_included or is_file_excluded:
+                #     continue
+                # controlla se il file è da escludere o da includere 
+                is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)   
                 is_file_excluded = any(rgx.search(file_name) for rgx in exclude_file_regex)   
-                if not is_file_included or is_file_excluded:
+
+                logger.debug(" ")
+                msg = f"FILE incluso:{is_file_included}, escluso:{is_file_excluded}, file:{file_name}, "
+                logger.debug(msg)
+
+                if is_file_excluded:
                     continue
+
+                msg = f"incluso {is_folder_included}, PATH :{rel_path}"
+                logger.debug(msg)
+                if not is_folder_included:
+                    if not is_folder_included or not is_file_included:
+                        continue 
+
+                msg = f"includo file:{file_name}, "
+                logger.debug(msg)
+
 
                 fh = FileHandler(entry_path)
                 if not fh.exists()[0]:
@@ -155,6 +200,8 @@ def fs_to_dad(
                 node_file.set_text(content_file)
                 folder_node.add_child(node_file)
 
+                return is_folder_included
+
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
 
@@ -176,7 +223,8 @@ def fs_to_dad(
         target_path_folder, 
         indent_content,
         include_file_regex,
-        exclude_file_regex
+        exclude_file_regex,
+        False
     )
 
     node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize)
