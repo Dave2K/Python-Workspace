@@ -27,7 +27,7 @@
         ".git",
         ".github",
 
-        "_artifacts", 
+        "**_artifacts**", 
 
         "__pycache__",
         "_logs",
