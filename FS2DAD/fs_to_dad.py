@@ -118,7 +118,8 @@ def fs_to_dad(
             return
 
         folder_node = XMLNode("Folder", {"Name": os.path.basename(current_dir)})
-        parent.add_child(folder_node)
+        # parent.add_child(folder_node)
+        is_file_included = False
 
         # scansione, prima file poi cartelle
         entries = sorted(
@@ -130,9 +131,8 @@ def fs_to_dad(
         )
         for entry in entries:
             entry_path = os.path.join(current_dir, entry.name)
-            
             if entry.is_dir():
-                add_element(
+                node = add_element(
                     folder_node, 
                     entry_path, 
                     ignore_folders, 
@@ -144,6 +144,10 @@ def fs_to_dad(
                     exclude_file_regex,
                     is_folder_included
                 )
+                if node:
+                    folder_node.add_child(node)
+                    is_file_included = True
+
             else:
                 file_name = entry.name
                 # is_file_included = not include_file_regex or any(rgx.match(file_name) for rgx in include_file_regex)
@@ -199,8 +203,9 @@ def fs_to_dad(
 
                 node_file.set_text(content_file)
                 folder_node.add_child(node_file)
+                is_file_included = True
 
-                return is_folder_included
+        return folder_node if is_file_included else None
 
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
@@ -214,7 +219,7 @@ def fs_to_dad(
     node_filesystem = XMLNode("FileSystem")
     node_dad.add_child(node_filesystem)
 
-    add_element(
+    node = add_element(
         node_filesystem, 
         target_path_folder, 
         ignore_folders, 
@@ -226,6 +231,8 @@ def fs_to_dad(
         exclude_file_regex,
         False
     )
+    if node:
+        node_filesystem.add_child(node)
 
     node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize)
     

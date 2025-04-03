@@ -1,8 +1,13 @@
 {
+    "target_path_folder0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
     "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": true,
     "sanitize": false,
+
+    "include_folders0": [ "**" ],
+    "include_files0": [ "**" ],
+
     "include_folders": [ 
         "**FlexCore.Caching.**",
         "**FlexCore.Core.**"
@@ -12,30 +17,26 @@
         "Directory.Build.targets",
         "appsettings.json"
     ],
-    "fake":[
-        "**FlexCore.Core*/**/*", 
-        "**FlexCore.Infrastructure*/**/*",
-        "**FlexCore.Caching*/**/*"
-    ],
     "exclude_folders": [
-        "bin", 
-        "obj", 
-        "debug", 
-        "release", 
-        ".vscode", 
-        ".vs", 
-        ".git",
-        ".github",
+        "**bin**", 
+        "**obj**", 
+        "**debug**", 
+        "**release**", 
+        "**.vscode**", 
+        "**.vs**", 
+        "**.git**",
+        "**.github**",
 
         "**_artifacts**", 
 
-        "__pycache__",
-        "_logs",
+        "**__pycache__**",
+        "**_logs**",
+        "**CsprojAnalyzer**",
         
-        "_temp",
-        "Temps",
-        "Documents",
-        "Applications"
+        "**_temp**",
+        "**Temps**",
+        "**Documents**",
+        "**Applications**"
     ],
     "exclude_files": [
         ".gitignore", 
@@ -43,6 +44,7 @@
         ".gitkeep", 
         ".github",
 
+        "__init__.py",
         "fs-sln-generator.py", 
         "reference-checker-fix.py", 
         "split_file.py", 

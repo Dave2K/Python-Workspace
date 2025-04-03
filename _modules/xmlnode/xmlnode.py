@@ -66,7 +66,8 @@ class XMLNode:
                 xml_content.append(f"{indent_str_content}{_text}")
 
         for child in self.children:
-            xml_content.append(child.to_xml(indent_chars=indent_chars, indent_level=indent_level + 1, sanitize=sanitize))
+            if child:
+                xml_content.append(child.to_xml(indent_chars=indent_chars, indent_level=indent_level + 1, sanitize=sanitize))
         xml_content.append(closing_tag)
 
         separator = "" if not indent_chars else "\n"
