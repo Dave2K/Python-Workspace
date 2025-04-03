@@ -19,7 +19,7 @@ from help import show_full_help
 # Configurazione logging
 configure_logging(
     enable_file_logging=True,       # Abilita log su file (default: False; alternativamente True)
-    file_mode='a',                 # Modalità di apertura file: 'a' per append, 'w' per scrivere (default: 'w')
+    file_mode='w',                 # Modalità di apertura file: 'a' per append, 'w' per scrivere (default: 'w')
     log_folder="_logs",            # Cartella in cui salvare i log (default: "logs")
     log_level=logging.INFO,         # Livello globale di log (default: logging.DEBUG)
     enable_console_logging=True,     # Abilita log su console (default: True)
@@ -29,6 +29,7 @@ configure_logging(
         'info': "%(asctime)s - %(name)s - %(message)s",
         'debug': "%(asctime)s - %(levelname)-8s - %(message)s",
     },
+    
     console_style="icon"            # Stile per la console: "text", "icon", "both" (default: "text" o "both")
     # Altre opzioni per il file logging sono disponibili, vedi la documentazione
 )

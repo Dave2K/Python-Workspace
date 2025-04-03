@@ -152,7 +152,7 @@ def fs_to_dad(
                 )
                 if node:
                     folder_node.add_child(node)
-                    is_file_included = True
+                    founded_file_included = True
                     logger.debug(f"aggiungo nodo a {rel_path}")
                 else:
                     logger.debug(f"NON aggiungo nodo a {rel_path}")
