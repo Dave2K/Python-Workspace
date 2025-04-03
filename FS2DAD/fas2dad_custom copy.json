@@ -1,0 +1,70 @@
+{
+    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder1": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
+    "output_path_file": ".\\_artifacts\\{target}.xml",
+    "indent_content": true,
+    "sanitize": false,
+    "include_folders0": [ "**" ],
+    "include_folders": [ 
+        "**FlexCore.Core.**",
+        "**FlexCore.Infrastructure.**",
+        "**FlexCore.Caching.**"
+     ],
+    "include_files0": [ "**" ],
+    "include_files": [ 
+        "Directory.Build.props",
+        "Directory.Build.targets",
+        "appsettings.json",
+        "**"
+    ],
+    "include_files2": [
+        "Directory.Build.props",
+        "Directory.Build.targets",
+        "appsettings.json",
+
+        "**FlexCore.Core.**",
+        "**FlexCore.Infrastructure.**",
+
+        "**FlexCore.Database.**",
+        "**FlexCore.Logging.**"
+    ],
+    "exclude_folders": [
+        "**/bin", 
+        "**/obj", 
+        "**/debug", 
+        "**/release", 
+        "**/.vscode", 
+        "**/.vs", 
+        "**/.git**",
+        "**/.github**",
+
+        "**/_artifacts", 
+
+        "**/__pycache__",
+        "**/_logs",
+        
+        "**/_temp",
+        "**/Temps",
+        "**/Documents"
+    ],
+    "fake": [
+        "**/Applications",
+        "**/projects" ,
+        "**/tests",
+        "**/solutions",  
+        "**/Tests",
+        "**/Solutions"
+    ],
+    "exclude_files": [
+        ".gitignore", 
+        ".gitattributes", 
+
+        "fs-sln-generator.py", 
+        "reference-checker-fix.py", 
+        "split_file.py", 
+        "text_editor.py",
+        "help.py",
+        "ToDO.md",
+        "Pattern supportati.md"
+    ]
+}

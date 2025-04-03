@@ -138,7 +138,7 @@ class ColoredFormatter(logging.Formatter):
         logging.WARNING: "⚠️ ",
         logging.ERROR: "❌ ",
         logging.CRITICAL: "🚨 ",
-        # SUCCESS_LEVEL: "✅ "
+        SUCCESS_LEVEL: "✅ "
     }
 
     def __init__(self, fmt: Optional[Dict[str, str]] = None, datefmt: Optional[str] = None, style: str = "text"):
@@ -244,12 +244,12 @@ class LoggingConfigurator:
     """
     DEFAULTS: Dict[str, Any] = {
         'log_folder': "logs",                      # Cartella dei log (alternativa: "_logs")
-        'log_level': logging.DEBUG,                # Livello di log globale
+        'log_level': logging.INFO,                # Livello di log globale
         'enable_console_logging': True,            # Abilita log su console
         'console_level': logging.DEBUG,            # Livello di log per la console
         'console_format': {                        # Formati per la console per ciascun livello
             'default': "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
-            'info': "%(asctime)s - %(name)s - %(message)s",
+            'info': "%(asctime)s - %(levelname)-8s - %(name)s - %(message)s",
             'debug': "%(asctime)s - %(levelname)-8s - %(message)s",
         },
         'enable_file_logging': False,              # Abilita log su file (modifica a True per attivare)
@@ -320,18 +320,37 @@ class LoggingConfigurator:
             handler.close()
             logger.removeHandler(handler)
     
+    # def _add_console_handler(self, logger: logging.Logger) -> None:
+    #     """
+    #     Aggiunge un handler per la console, configurato con il livello e il formato personalizzato.
+        
+    #     :param logger: Logger a cui aggiungere l'handler.
+    #     """
+    #     # Usa console_level se definito, altrimenti usa log_level
+    #     console_level = self.config.get('console_level', self.config['log_level'])
+        
+    #     # Preferisci console_level se definito
+    #     handler = logging.StreamHandler()
+    #     handler.setLevel(console_level)  
+    #     handler.setFormatter(ColoredFormatter(fmt=self.config['console_format'], style=self.config['console_style']))
+    #     logger.addHandler(handler)
     def _add_console_handler(self, logger: logging.Logger) -> None:
         """
         Aggiunge un handler per la console, configurato con il livello e il formato personalizzato.
         
         :param logger: Logger a cui aggiungere l'handler.
         """
+        # Usa console_level se definito, altrimenti usa log_level
+        console_level = self.config.get('console_level', self.config['log_level'])
+        
+        # Imposta il logger al livello più permissivo tra log_level e console_level
+        logger.setLevel(min(self.config['log_level'], console_level))
+
         handler = logging.StreamHandler()
-        handler.setLevel(self.config['console_level'])
-        handler.setFormatter(ColoredFormatter(fmt=self.config['console_format'],
-                                              style=self.config['console_style']))
+        handler.setLevel(console_level)  
+        handler.setFormatter(ColoredFormatter(fmt=self.config['console_format'], style=self.config['console_style']))
         logger.addHandler(handler)
-    
+
     def _add_file_handler(self, logger: logging.Logger) -> None:
         """
         Aggiunge un handler per il file di log, configurato con il livello e il formato specificato.

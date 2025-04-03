@@ -144,15 +144,17 @@ def fs_to_dad(
                 if content_file:
                     is_text, msg_err = fh.is_text()
                     if not is_text:
-                        msg = f"File binario: {fh.file_path} (MIME: {fh.mime}, Encoding: {fh.encoding})"
+                        msg = f"File binario: [MIME: {fh.mime}, Encoding: {fh.encoding}] {fh.file_path}"
                         content_file = msg
                         logger.warning(msg)
-                else:
-                    msg = f"Errore lettura file: {fh.file_path} - {msg_err}"
+                elif msg_err:
+                    msg = f"Errore [{msg_err}] - lettura file: {fh.file_path}"
                     content_file = msg
-                    logger.error(msg)
+                    logger.warning(msg)
+
                 node_file.set_text(content_file)
                 folder_node.add_child(node_file)
+
 
     node_dad = XMLNode("DataArchitectureDesign", {"Author": "Davide"})
 
