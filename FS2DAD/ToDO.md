@@ -8,4 +8,7 @@ controllo se esiste percorso destinazione
 
 ## BUGS
 
+non funziona enale timestamp su nome file log
+qundo metto esattamente il nome file senza gli asterischi mette anche - Copia
+
 ## DA IMPLEMETARE

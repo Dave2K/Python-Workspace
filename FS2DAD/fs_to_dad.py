@@ -5,13 +5,11 @@ Generatore XML con supporto a:
 - CDATA per file di testo
 - vuoto per file binari (non riconosciuti come testo)
 """
-from _modules.logging.logging import create_logger  # <-- POSIZIONE ORIGINALE
-logger = create_logger(__name__)  # <-- POSIZIONE ORIGINALE
+from _modules.logging.logging import create_logger 
+logger = create_logger(__name__) 
 
-# Altri import ESATTAMENTE come nel tuo codice originale
 import re
 import os
-import fnmatch
 import datetime
 from _modules.xmlnode import XMLNode
 from _modules.file_utils import FileHandler

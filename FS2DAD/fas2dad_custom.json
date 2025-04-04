@@ -1,25 +1,28 @@
 {
-    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
-    "target_path_folder_1": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder_0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
+    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": true,
     "sanitize": false,
 
-    "include_folders": [ "**" ],
-    "include_files": [ "**" ],
+    "include_folders_0": [
+        "**"
+    ],
+    "include_files_0": [
+        "**"
+    ],
 
-    "include_folders_1": [ 
+    "include_folders": [
         "**FlexCore.Caching.**",
         "**FlexCore.Core.**"
     ],
-    "include_files:_1": [
-        "**Directory.Build.props**",
-        "**Directory.Build.targets**",
-        "**appsettings.json**"
+    "include_files": [
+        "Directory.Build.props",
+        "Directory.Build.targets",
+        "appsettings.json"
     ],
-    "in_parking": [
-        
-    ],
+    "in_parking": [],
+    
     "exclude_folders": [
         "**bin**", 
         "**obj**", 
@@ -29,13 +32,10 @@
         "**.vs**", 
         "**.git**",
         "**.github**",
-
         "**_artifacts**", 
-
         "**__pycache__**",
         "**_logs**",
         "**CsprojAnalyzer**",
-        
         "**_temp**",
         "**Temps**",
         "**Documents**",
@@ -46,7 +46,6 @@
         ".gitattributes", 
         ".gitkeep", 
         ".github",
-
         "__init__.py",
         "fs-sln-generator.py", 
         "reference-checker-fix.py", 
