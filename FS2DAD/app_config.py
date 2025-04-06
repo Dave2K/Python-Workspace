@@ -27,7 +27,11 @@ class AppConfig():
     SANITIZE = "sanitize"
 
     # Campi obbligatori
-    REQUIRED_FIELDS = [TARGET_PATH_FOLDER, OUTPUT_PATH_FILE]
+    REQUIRED_FIELDS = [
+        TARGET_PATH_FOLDER, OUTPUT_PATH_FILE, 
+        INCLUDE_FOLDERS, INCLUDE_FOLDERS,
+        INCLUDE_FILES, EXCLUDE_FILES
+    ]
 
     DEFAULT_CONFIG = {
         TARGET_PATH_FOLDER: "/Path/Target_Folder",
@@ -35,6 +39,7 @@ class AppConfig():
         INDENT_CONTENT: False,
         SANITIZE: False,
         INCLUDE_FOLDERS: ["*"],
+        INCLUDE_FILES: [],
         EXCLUDE_FOLDERS: [
             "bin", "obj", "debug", "release",
             ".vscode", ".vs", "*.git*", 
@@ -44,8 +49,7 @@ class AppConfig():
         EXCLUDE_FILES: [
             ".gitignore", ".gitattributes",
             "*.tmp", "*.log", "*.xml"
-        ],
-        INCLUDE_FILES: []
+        ]       
     }
 
     DEFAULT_FILE_NAME_CONFIG = f"{Path(sys.argv[0]).stem}.json"

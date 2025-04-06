@@ -2,7 +2,7 @@
     "target_path_folder_0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
     "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
     "output_path_file": ".\\_artifacts\\{target}.xml",
-    "indent_content": true,
+    "indent_content": false,
     "sanitize": false,
 
     "include_folders_0": [
@@ -13,8 +13,7 @@
     ],
 
     "include_folders": [
-        "**FlexCore.Caching.**",
-        "**FlexCore.Core.**"
+        "**FlexCore.Database.**"
     ],
     "include_files": [
         "Directory.Build.props",
