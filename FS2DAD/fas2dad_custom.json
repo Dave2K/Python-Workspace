@@ -1,6 +1,7 @@
 {
     "target_path_folder_0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
-    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder1": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": false,
     "sanitize": false,
@@ -13,14 +14,17 @@
     ],
 
     "include_folders": [
-        "**FlexCore.Database.**"
+        "**FlexCore.Caching.**"
     ],
     "include_files": [
         "Directory.Build.props",
         "Directory.Build.targets",
         "appsettings.json"
     ],
-    "in_parking": [],
+    "in_parking": [
+        "**FlexCore.Database.**",
+        "**FlexCore.Infrastructure.**"
+    ],
     
     "exclude_folders": [
         "**bin**", 

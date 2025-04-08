@@ -2,6 +2,7 @@ from _modules.logging.logging import create_logger
 logger = create_logger(__name__)
 
 import xml.sax.saxutils as saxutils
+import re
 
 class XMLNode:
     """Classe per rappresentare un nodo XML."""
@@ -56,6 +57,8 @@ class XMLNode:
         xml_content = [opening_tag]
         if self.content.text:
             content = self.content.text if not sanitize else self.sanitize_xml(self.content.text)
+            """Rimuove i commenti XML ///"""
+            content = self.remove_xml_doc_comments(content)
             indent_str_content = indent_chars * (indent_level + 1)
             if indent_chars:
                 lines = content.splitlines()
@@ -109,4 +112,17 @@ class XMLNode:
         # Sostituisce la sequenza "]]>" con "]]]]><![CDATA["
         sanitized_text = text.replace("]]>", "]]]]><![CDATA[")
         # Escapa i caratteri speciali per evitare conflitti con la sintassi XML
-        return saxutils.escape(sanitized_text)
+        return self.sanitize_xml(sanitized_text)
+    
+    def remove_xml_doc_comments(self, code: str) -> str:
+        """
+        Rimuove le righe di commento C# che iniziano con '///', inclusi i newline di apertura e chiusura.
+
+        Parametri:
+            code (str): Codice C# come stringa.
+
+        Ritorna:
+            str: Codice senza righe di commento ///.
+        """
+        # Rimuove tutte le righe che iniziano con '///' (incluso il \n)
+        return re.sub(r'\n[ \t]*///.*', '', code)
