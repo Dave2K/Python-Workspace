@@ -76,7 +76,7 @@ class XMLNode:
         separator = "" if not indent_chars else "\n"
         return separator.join(xml_content)
     
-    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8", sanitize=False):
+    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8", sanitize=False, split_size=0):
         separator = "" if not indent_chars else "\n"
         header = '<?xml version="1.0" encoding="utf-8"?>'
         content_xml = f'{header}{separator}{self.to_xml(indent_chars=indent_chars, indent_level=indent_level, sanitize=sanitize)}'

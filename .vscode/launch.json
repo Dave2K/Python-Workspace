@@ -9,7 +9,19 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
-                "--config", "${workspaceFolder}/FS2DAD/fas2dad_custom.json"
+                "--config", "${workspaceFolder}/FS2DAD/fas2dad_custom.json",
+            ]
+        }, 
+        {
+            "name": "Esegui split_file.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/split_file.py", 
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/_artifacts",
+            "args": [
+                "${workspaceFolder}/_artifacts/python-workspace_sanitized.xml",
+                "16384"
             ]
         },
         {

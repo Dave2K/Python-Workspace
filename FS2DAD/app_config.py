@@ -25,6 +25,7 @@ class AppConfig():
     INDENT_CONTENT = "indent_content"
     INCLUDE_FILES = "include_files"
     SANITIZE = "sanitize"
+    SPLIT_SIZE = "spli_size"
 
     # Campi obbligatori
     REQUIRED_FIELDS = [
@@ -38,6 +39,7 @@ class AppConfig():
         OUTPUT_PATH_FILE: "{target}.xml",
         INDENT_CONTENT: False,
         SANITIZE: False,
+        SPLIT_SIZE: 0,
         INCLUDE_FOLDERS: ["*"],
         INCLUDE_FILES: [],
         EXCLUDE_FOLDERS: [
@@ -73,6 +75,7 @@ class AppConfig():
         self.indent_content = self.DEFAULT_CONFIG[self.INDENT_CONTENT]
         self.include_files = self.DEFAULT_CONFIG[self.INCLUDE_FILES]
         self.sanitize = self.DEFAULT_CONFIG[self.SANITIZE]
+        self.split_size = self.DEFAULT_CONFIG[self.SPLIT_SIZE]
 
         # Log per segnalare l'inizializzazione
         logger.debug("Configurazione inizializzata con i valori di default.")
@@ -94,6 +97,7 @@ class AppConfig():
         self.indent_content = config_data.get(self.INDENT_CONTENT, self.DEFAULT_CONFIG[self.INDENT_CONTENT])
         self.include_files = config_data.get(self.INCLUDE_FILES, self.DEFAULT_CONFIG[self.INCLUDE_FILES])
         self.sanitize = config_data.get(self.SANITIZE, self.DEFAULT_CONFIG[self.SANITIZE])
+        self.split_size = config_data.get(self.SPLIT_SIZE, self.DEFAULT_CONFIG[self.SPLIT_SIZE])
 
     def to_dict(self):
         """
@@ -110,7 +114,8 @@ class AppConfig():
             self.EXCLUDE_FILES: self.exclude_files,
             self.INDENT_CONTENT: self.indent_content,
             self.INCLUDE_FILES: self.include_files,
-            self.SANITIZE: self.sanitize
+            self.SANITIZE: self.sanitize,
+            self.SPLIT_SIZE: self.split_size
         }
 
     def load(self):

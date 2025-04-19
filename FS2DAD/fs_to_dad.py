@@ -49,6 +49,7 @@ def fs_to_dad(
     output_file: str,
     indent_chars: str = "",
     sanitize: bool = False,
+    split_size: int = 0,
     ignore_folders: list = [],
     ignore_files: list = [],
     include_folders: list = ["*"],
@@ -173,13 +174,9 @@ def fs_to_dad(
                 if is_file_excluded:
                     continue
 
-                # msg = f"incluso {cb(is_folder_included)}, PATH :{rel_path}"
                 msg = f"incluso {is_folder_included}, PATH :{rel_path}"
                 logger.debug(msg)
-                # if not is_file_included:
-                #     if not is_folder_included:
-                #         if not is_folder_included or not is_file_included:
-                #             continue 
+
                 if not is_folder_included and not is_file_included:
                     continue 
 
@@ -195,11 +192,11 @@ def fs_to_dad(
                 node_file = XMLNode("File", {
                     "Name": fh.name, 
                     # "Size": str(fh.size),
-                    "MIME": fh.mime,
-                    "Encoding": fh.encoding
+                    # "MIME": fh.mime,
+                    # "Encoding": fh.encoding
                 })
-                if fh.bom:
-                    node_file.attributes["BOM"] = "True"
+                # if fh.bom:
+                #     node_file.attributes["BOM"] = "True"
 
                 content_file, msg_err = fh.read()
                 if content_file:
@@ -246,6 +243,6 @@ def fs_to_dad(
     if node:
         node_filesystem.add_child(node)
 
-    node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize)
+    node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize, split_size=split_size)
     
     return True, f"XML generato: {output_file}"

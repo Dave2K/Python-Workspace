@@ -1,29 +1,36 @@
 {
     "target_path_folder_0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
-    "target_path_folder1": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder_1": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
     "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
     "output_path_file": ".\\_artifacts\\{target}.xml",
-    "indent_content": false,
+    "indent_content": true,
     "sanitize": false,
 
-    "include_folders_0": [
+    "include_folders": [
         "**"
     ],
     "include_files_0": [
         "**"
     ],
 
-    "include_folders": [
-        "**FlexCore.Caching.**"
+    "include_folders_1": [
+        "**DSx.Caching.Abstractions**"
     ],
     "include_files": [
         "Directory.Build.props",
         "Directory.Build.targets",
-        "appsettings.json"
+        "appsettings.json",
+        "testsettings.json",
+        "coverlet.runsettings",
+        "Directory.Packages.props",
+        "DotNetSettings.props",
+        "TestDependencies.props",
+        "WSEnvironment.template"
     ],
     "in_parking": [
         "**FlexCore.Database.**",
-        "**FlexCore.Infrastructure.**"
+        "**FlexCore.Infrastructure.**",
+        "**.github**"
     ],
     
     "exclude_folders": [
@@ -33,27 +40,35 @@
         "**release**", 
         "**.vscode**", 
         "**.vs**", 
-        "**.git**",
-        "**.github**",
+        ".git",
+
         "**_artifacts**", 
+        "**docs**",
+        "**samples**",
+
         "**__pycache__**",
         "**_logs**",
         "**CsprojAnalyzer**",
-        "**_temp**",
-        "**Temps**",
+
         "**Documents**",
-        "**Applications**"
+        "**Applications**",
+
+        "**_temp**",
+        "**temp**",
+        "**Temps**"        
     ],
     "exclude_files": [
         ".gitignore", 
         ".gitattributes", 
         ".gitkeep", 
-        ".github",
+
         "__init__.py",
+        "copy_and_rename_projects.py",
         "fs-sln-generator.py", 
         "reference-checker-fix.py", 
         "split_file.py", 
         "text_editor.py",
+        
         "help.py",
         "ToDO.md",
         "Pattern supportati.md"
