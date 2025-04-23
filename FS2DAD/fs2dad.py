@@ -51,6 +51,7 @@ def apply_cli_overrides(app_config, args):
         app_config.include_files = args.include_files.split(",")
     if args.indent_content:
         app_config.indent_content = True
+    
 
 def main():
     parser = argparse.ArgumentParser(
@@ -66,6 +67,7 @@ def main():
     parser.add_argument("--include-files", help="Pattern inclusione file")
     parser.add_argument("--sanitize", help="valida xml")
     parser.add_argument("--split_size", help="Dimensione massima (in byte) di ciascun file XML generato. 0 = file intero.")
+    parser.add_argument("--remove_xml_comments", help="Rimuove i commenti xml nei file.")
     parser.add_argument("--help", action='store_true')
 
     args = parser.parse_args()
@@ -104,6 +106,7 @@ def main():
         indent_chars="  " if app_config.indent_content else "",
         sanitize=app_config.sanitize,
         split_size=app_config.split_size,
+        remove_xml_comments=app_config.remove_xml_comments,
         ignore_folders=app_config.exclude_folders,
         ignore_files=app_config.exclude_files,
         include_folders=app_config.include_folders,

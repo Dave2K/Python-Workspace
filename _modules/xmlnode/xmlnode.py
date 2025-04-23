@@ -43,7 +43,7 @@ class XMLNode:
         self.content.is_text = True
         self.content.is_cdata = False
 
-    def to_xml(self, indent_chars="", indent_level=0, sanitize=False):
+    def to_xml(self, indent_chars="", indent_level=0, sanitize=False, remove_xml_comments=False):
         """Converte il nodo in stringa XML."""
         indent_str = indent_chars * indent_level
         attrs = " ".join([f'{k}="{v}"' for k, v in self.attributes.items()])
@@ -58,7 +58,8 @@ class XMLNode:
         if self.content.text:
             content = self.content.text if not sanitize else self.sanitize_xml(self.content.text)
             """Rimuove i commenti XML ///"""
-            content = self.remove_xml_doc_comments(content)
+            if remove_xml_comments:
+                content = self.remove_xml_doc_comments(content)
             indent_str_content = indent_chars * (indent_level + 1)
             if indent_chars:
                 lines = content.splitlines()
@@ -70,16 +71,24 @@ class XMLNode:
 
         for child in self.children:
             if child:
-                xml_content.append(child.to_xml(indent_chars=indent_chars, indent_level=indent_level + 1, sanitize=sanitize))
+                xml_content.append(child.to_xml(indent_chars=indent_chars, indent_level=indent_level + 1, sanitize=sanitize, remove_xml_comments=remove_xml_comments))
         xml_content.append(closing_tag)
 
         separator = "" if not indent_chars else "\n"
         return separator.join(xml_content)
     
-    def write_file(self, file_name, indent_chars="", indent_level=0, encoding="utf-8", sanitize=False, split_size=0):
+    def write_file(self, file_name, 
+                   indent_chars="", 
+                   indent_level=0, 
+                   encoding="utf-8", 
+                   sanitize=False, 
+                   split_size=0,
+                   remove_xml_comments=False
+        ):
         separator = "" if not indent_chars else "\n"
         header = '<?xml version="1.0" encoding="utf-8"?>'
-        content_xml = f'{header}{separator}{self.to_xml(indent_chars=indent_chars, indent_level=indent_level, sanitize=sanitize)}'
+        to_xml_content = self.to_xml(indent_chars=indent_chars, indent_level=indent_level, sanitize=sanitize, remove_xml_comments=remove_xml_comments)
+        content_xml = f'{header}{separator}{to_xml_content}'
         with open(file_name, "w", encoding=encoding) as f:
             f.write(content_xml)
  

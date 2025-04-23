@@ -26,6 +26,7 @@ class AppConfig():
     INCLUDE_FILES = "include_files"
     SANITIZE = "sanitize"
     SPLIT_SIZE = "spli_size"
+    REMOVE_XML_COMMENTS = "remove_xml_comments"
 
     # Campi obbligatori
     REQUIRED_FIELDS = [
@@ -40,6 +41,7 @@ class AppConfig():
         INDENT_CONTENT: False,
         SANITIZE: False,
         SPLIT_SIZE: 0,
+        REMOVE_XML_COMMENTS: False,
         INCLUDE_FOLDERS: ["*"],
         INCLUDE_FILES: [],
         EXCLUDE_FOLDERS: [
@@ -76,6 +78,7 @@ class AppConfig():
         self.include_files = self.DEFAULT_CONFIG[self.INCLUDE_FILES]
         self.sanitize = self.DEFAULT_CONFIG[self.SANITIZE]
         self.split_size = self.DEFAULT_CONFIG[self.SPLIT_SIZE]
+        self.remove_xml_comments = self.DEFAULT_CONFIG[self.REMOVE_XML_COMMENTS]
 
         # Log per segnalare l'inizializzazione
         logger.debug("Configurazione inizializzata con i valori di default.")
@@ -98,6 +101,7 @@ class AppConfig():
         self.include_files = config_data.get(self.INCLUDE_FILES, self.DEFAULT_CONFIG[self.INCLUDE_FILES])
         self.sanitize = config_data.get(self.SANITIZE, self.DEFAULT_CONFIG[self.SANITIZE])
         self.split_size = config_data.get(self.SPLIT_SIZE, self.DEFAULT_CONFIG[self.SPLIT_SIZE])
+        self.remove_xml_comments = config_data.get(self.REMOVE_XML_COMMENTS, self.DEFAULT_CONFIG[self.REMOVE_XML_COMMENTS])
 
     def to_dict(self):
         """
@@ -115,7 +119,8 @@ class AppConfig():
             self.INDENT_CONTENT: self.indent_content,
             self.INCLUDE_FILES: self.include_files,
             self.SANITIZE: self.sanitize,
-            self.SPLIT_SIZE: self.split_size
+            self.SPLIT_SIZE: self.split_size,
+            self.REMOVE_XML_COMMENTS: self.remove_xml_comments
         }
 
     def load(self):

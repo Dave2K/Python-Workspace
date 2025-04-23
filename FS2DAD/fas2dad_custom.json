@@ -1,22 +1,26 @@
 {
-    "target_path_folder_0": "C:\\Users\\david\\WorkSpace\\Sources\\python-workspace",
-    "target_path_folder_1": "C:\\Users\\david\\WorkSpace\\Sources\\FlexCore-Workspace",
-    "target_path_folder": "C:\\Users\\david\\WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
+    "target_path_folder_0": "C:\\Users\\david\\My-WorkSpace\\Sources\\python-workspace",
+    "target_path_folder_1": "C:\\Users\\david\\My-WorkSpace\\Sources\\FlexCore-Workspace",
+    "target_path_folder": "C:\\Users\\david\\My-WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
     "output_path_file": ".\\_artifacts\\{target}.xml",
     "indent_content": true,
     "sanitize": false,
+    "remove_xml_comments":true,
 
     "include_folders": [
         "**"
     ],
-    "include_files_0": [
+    "include_files": [
         "**"
     ],
 
     "include_folders_1": [
-        "**DSx.Caching.Abstractions**"
+        "**DSx.Caching.Abstractions**",
+        "**DSx.Caching.SharedKernel**",
+        "**resources**",
+        "**.github**"
     ],
-    "include_files": [
+    "include_files_1": [
         "Directory.Build.props",
         "Directory.Build.targets",
         "appsettings.json",
@@ -25,7 +29,8 @@
         "Directory.Packages.props",
         "DotNetSettings.props",
         "TestDependencies.props",
-        "WSEnvironment.template"
+        "WSEnvironment.template",
+        "DSx.Caching.sln"
     ],
     "in_parking": [
         "**FlexCore.Database.**",
@@ -38,9 +43,9 @@
         "**obj**", 
         "**debug**", 
         "**release**", 
-        "**.vscode**", 
         "**.vs**", 
         ".git",
+        ".nuget",
 
         "**_artifacts**", 
         "**docs**",

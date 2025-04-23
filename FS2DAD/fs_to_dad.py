@@ -50,6 +50,7 @@ def fs_to_dad(
     indent_chars: str = "",
     sanitize: bool = False,
     split_size: int = 0,
+    remove_xml_comments : bool = False,
     ignore_folders: list = [],
     ignore_files: list = [],
     include_folders: list = ["*"],
@@ -243,6 +244,10 @@ def fs_to_dad(
     if node:
         node_filesystem.add_child(node)
 
-    node_dad.write_file(file_name=output_file, indent_chars=indent_chars, sanitize=sanitize, split_size=split_size)
+    node_dad.write_file(file_name=output_file, 
+                        indent_chars=indent_chars, 
+                        sanitize=sanitize, 
+                        split_size=split_size, 
+                        remove_xml_comments=remove_xml_comments)
     
     return True, f"XML generato: {output_file}"
