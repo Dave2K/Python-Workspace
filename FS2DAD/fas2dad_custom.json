@@ -3,7 +3,7 @@
     "target_path_folder_1": "C:\\Users\\david\\My-WorkSpace\\Sources\\FlexCore-Workspace",
     "target_path_folder": "C:\\Users\\david\\My-WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
     "output_path_file": ".\\_artifacts\\{target}.xml",
-    "indent_content": true,
+    "indent_content": false,
     "sanitize": false,
     "remove_xml_comments":true,
 
