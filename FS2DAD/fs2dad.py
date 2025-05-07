@@ -18,7 +18,7 @@ from help import show_full_help
 
 # Configurazione logging
 configure_logging(
-    enable_file_logging=True,       # Abilita log su file (default: False; alternativamente True)
+    enable_file_logging=False,       # Abilita log su file (default: False; alternativamente True)
     file_mode='w',                 # Modalità di apertura file: 'a' per append, 'w' per scrivere (default: 'w')
     log_folder="_logs",            # Cartella in cui salvare i log (default: "logs")
     log_level=logging.INFO,         # Livello globale di log (default: logging.DEBUG)

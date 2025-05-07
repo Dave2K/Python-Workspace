@@ -2,7 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Esegui fs-dad.py",
+            "name": "Esegui QEMU Manager",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/QEMU-Manager/main.py", 
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+            ]
+        }, 
+        {
+            "name": "Esegui fs2dad",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/FS2DAD/fs2dad.py", 
@@ -31,7 +41,7 @@
             "program": "${workspaceFolder}/FS2DAD/generate_csproj_xml", 
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
-            "args0": [
+            "args": [
                 "--config", "${workspaceFolder}/FS2DAD/fas2dad_custom.json"
             ]
         },
