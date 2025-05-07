@@ -1,10 +1,12 @@
 {
     "target_path_folder_0": "C:\\Users\\david\\My-WorkSpace\\Sources\\python-workspace",
     "target_path_folder_1": "C:\\Users\\david\\My-WorkSpace\\Sources\\FlexCore-Workspace",
-    "target_path_folder": "C:\\Users\\david\\My-WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
-    "output_path_file": ".\\_artifacts\\{target}.xml",
-    "indent_content": false,
-    "sanitize": false,
+    "target_path_folder2": "C:\\Users\\david\\My-WorkSpace\\Sources\\DSx-WorkSpace\\DSx.Caching",
+    "target_path_folder": "/home/davide/scripts/vvm-workspace/",
+    "output_path_file_0": ".\\_artifacts\\{target}.xml",
+    "output_path_file": "./_artifacts/{target}.xml",
+    "indent_content": true,
+    "sanitize": true,
     "remove_xml_comments":true,
 
     "include_folders": [
@@ -76,6 +78,8 @@
         
         "help.py",
         "ToDO.md",
-        "Pattern supportati.md"
+        "Pattern supportati.md",
+
+        "**.ico**"
     ]
 }

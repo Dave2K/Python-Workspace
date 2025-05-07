@@ -146,4 +146,3 @@ class AppConfig():
         sanitized_filename = f"{name}{{sanitize}}{ext}"
         return os.path.join(directory, sanitized_filename)
 
-        
