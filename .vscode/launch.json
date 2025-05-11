@@ -1,6 +1,17 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "name": "Esegui Disk Image Manager",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/disk_img_manager/main.py", 
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+            ]
+        }, 
         {
             "name": "Esegui QEMU Manager",
             "type": "debugpy",
