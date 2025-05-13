@@ -23,7 +23,7 @@
             ]
         }, 
         {
-            "name": "Esegui fs2dad",
+            "name": "Esegui FS2DAD",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/FS2DAD/fs2dad.py", 

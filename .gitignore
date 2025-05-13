@@ -3,3 +3,4 @@ _artifacts/*
 !_artifacts/.gitkeep
 _logs/*
 !_logs/.gitkeep
+.venv/
